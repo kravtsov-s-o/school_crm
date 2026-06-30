@@ -1,0 +1,22 @@
+[project]
+name = "school-crm"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "s.kravtsov",email = "s.kravtsov@hotmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13,<4"
+dependencies = [
+    "django (>=6.0.6,<7.0.0)",
+    "psycopg2-binary (>=2.9.12,<3.0.0)",
+    "django-environ (>=0.14.0,<0.15.0)",
+    "django-timezone-field (>=7.2.2,<8.0.0)",
+    "django-phonenumber-field[phonenumbers] (>=8.4.0,<9.0.0)",
+    "pillow (>=12.2.0,<13.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
