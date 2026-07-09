@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'phonenumber_field',
-    'users'
+    'school_settings',
+    'users',
 ]
 
 MIDDLEWARE = [
