@@ -24,7 +24,7 @@ class CurrencyAdmin(SystemProtectedAdminMixin, admin.ModelAdmin):
 @admin.register(ExchangeRate)
 class ExchangeRateAdmin(admin.ModelAdmin):
     list_display = ('currency', 'rate', 'date')
-    list_filter = ('currency',)
+    list_filter = ('currency', 'date')
     search_fields = ('currency',)
 
 
