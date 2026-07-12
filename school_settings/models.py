@@ -106,8 +106,16 @@ class Duration(TimeStampMixin, SystemRecordMixin):
 
 class LessonType(TimeStampMixin):
     name = models.CharField(unique=True, max_length=100, verbose_name=_('Name'))
-    min_participants = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name=_('Min. Participants'))
-    max_participants = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name=_('Max. Participants'))
+    min_participants = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        verbose_name=_('Min. Participants'),
+        help_text=mark_safe(_('Leave blank for "Individual" lesson type')))
+    max_participants = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        verbose_name=_('Max. Participants'),
+        help_text=mark_safe(_('Leave blank for "Individual" lesson type')))
     duration_affects_price = models.BooleanField(
         default=True,
         verbose_name=_('Duration Affects Price'),
