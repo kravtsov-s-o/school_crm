@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'school_settings',
     'pricing',
+    'finance',
     'users',
 ]
 
