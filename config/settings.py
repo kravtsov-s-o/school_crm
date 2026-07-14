@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'school_settings',
     'pricing',
     'finance',
+    'companies',
     'users',
 ]
 
