@@ -1,10 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+from django.utils.translation import gettext_lazy as _
 
 from users.models import User, Student, StudentProfile, TeacherProfile, Teacher
 
 ADDITIONAL_FIELDSET = (
-    "Additional Fields",
+    _("Additional Fields"),
     {"fields": ("avatar", "timezone", "is_teacher", "is_student", "phone")},
 )
 
@@ -32,8 +33,21 @@ class UserAdmin(DjangoUserAdmin):
         "first_name",
         "last_name",
     )
-    add_fieldsets = DjangoUserAdmin.add_fieldsets + (ADDITIONAL_FIELDSET,)
+    add_fieldsets = DjangoUserAdmin.add_fieldsets + (
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
+        ADDITIONAL_FIELDSET,
+    )
     fieldsets = DjangoUserAdmin.fieldsets + (ADDITIONAL_FIELDSET,)
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for obj in instances:
+            if not obj.pk:
+                existing = type(obj).objects.filter(user=form.instance).first()
+                if existing:
+                    obj.pk = existing.pk
+            obj.save()
+        formset.save_m2m()
 
 
 class StudentProfileInline(admin.StackedInline):

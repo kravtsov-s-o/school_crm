@@ -100,8 +100,26 @@ class TeacherProfile(models.Model):
     about_me = models.TextField(blank=True, verbose_name=_("About Me"))
     is_active = models.BooleanField(default=True, verbose_name=_("Active"))
 
+    def __str__(self):
+        if self.user.first_name or self.user.last_name:
+            return f"{self.user.first_name} {self.user.last_name}"
+        else:
+            return f"{self.user.email}"
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     teacher = models.ForeignKey(TeacherProfile, null=True, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True, verbose_name=_("Active"))
+
+    def __str__(self):
+        if self.user.first_name or self.user.last_name:
+            return f"{self.user.first_name} {self.user.last_name}"
+        else:
+            return f"{self.user.email}"
+
+    def __repr__(self):
+        return self.__str__()
