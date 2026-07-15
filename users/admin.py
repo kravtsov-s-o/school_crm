@@ -56,6 +56,8 @@ class StudentProfileInline(admin.StackedInline):
     min_num = 1
     max_num = 1
 
+    readonly_fields = ('account',)
+
 
 @admin.register(Student)
 class StudentAdmin(UserAdmin):
@@ -67,6 +69,8 @@ class TeacherProfileInline(admin.StackedInline):
     can_delete = False
     min_num = 1
     max_num = 1
+
+    readonly_fields = ('account',)
 
 
 @admin.register(Teacher)

@@ -21,8 +21,7 @@ class Account(TimeStampMixin):
 
     @property
     def owner(self):
-        # for name in ('student_profile', 'teacher_profile', 'company'):
-        for name in ('company',):
+        for name in ('student_profile', 'teacher_profile', 'company'):
             try:
                 return getattr(self, name)
             except ObjectDoesNotExist:
