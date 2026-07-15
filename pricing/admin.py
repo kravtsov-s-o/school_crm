@@ -41,6 +41,8 @@ class SchoolPriceAdmin(BasePriceAdmin):
 
 @admin.register(TeacherRate)
 class TeacherRateAdmin(BasePriceAdmin):
+    list_display = BasePriceAdmin.list_display + ('grade',)
+    list_filter = BasePriceAdmin.list_filter + ('grade',)
     inlines = [TeacherRateRowInline]
 
 

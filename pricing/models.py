@@ -67,10 +67,24 @@ class SchoolPriceRow(AbstractPriceRow):
 
 
 class TeacherRate(AbstractPrice):
+    grade = models.ForeignKey(
+        'school_settings.TeacherGrade',
+        null=True,
+        on_delete=models.PROTECT,
+        related_name='rates',
+        verbose_name=_('Grade'))
+
     class Meta(AbstractPrice.Meta):
         verbose_name = _('Teacher Rate')
         verbose_name_plural = _('Teacher Rates')
         ordering = ['name']
+
+        constraints = [
+            UniqueConstraint(
+                fields=['grade', 'currency', 'language', 'lesson_type'],
+                name='unique_teachers_rates_key'
+            )
+        ]
 
 
 class TeacherRateRow(AbstractPriceRow):
