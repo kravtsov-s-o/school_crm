@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from core._helpers import SystemProtectedAdminMixin
-from school_settings.models import Language, Currency, Duration, LessonType, ExchangeRate
+from school_settings.models import Language, Currency, Duration, LessonType, ExchangeRate, TeacherGrade
 
 
 # Register your models here.
@@ -25,7 +25,6 @@ class CurrencyAdmin(SystemProtectedAdminMixin, admin.ModelAdmin):
 class ExchangeRateAdmin(admin.ModelAdmin):
     list_display = ('currency', 'rate', 'date')
     list_filter = ('currency', 'date')
-    search_fields = ('currency',)
 
 
 
@@ -42,3 +41,11 @@ class LessonTypeAdmin(admin.ModelAdmin):
     list_filter = ('is_active', 'duration_affects_price')
     search_fields = ('name',)
     ordering = ('name',)
+
+
+@admin.register(TeacherGrade)
+class TeacherGradeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'sort_order', 'is_active')
+    list_filter = ('is_active',)
+    search_fields = ('name',)
+    list_editable = ('sort_order',)

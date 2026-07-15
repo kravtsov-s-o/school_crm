@@ -120,7 +120,7 @@ class LessonType(TimeStampMixin):
         default=True,
         verbose_name=_('Duration Affects Price'),
         help_text=mark_safe(_('If enabled, duration is part of the price key: <br>'
-                    '45 and 60 min are priced differently. If disabled, price does not depend on duration.')),
+                              '45 and 60 min are priced differently. If disabled, price does not depend on duration.')),
     )
     is_active = models.BooleanField(default=True, verbose_name=_('Active'))
 
@@ -141,3 +141,20 @@ class LessonType(TimeStampMixin):
                 name='lessontype_max_gte_min',
             ),
         ]
+
+
+class TeacherGrade(TimeStampMixin):
+    name = models.CharField(unique=True, max_length=100, verbose_name=_('Name'))
+    sort_order = models.PositiveSmallIntegerField(default=0, verbose_name=_('Sort Order'))
+    is_active = models.BooleanField(default=True, verbose_name=_('Active'))
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return self.__str__()
+
+    class Meta:
+        verbose_name = _('Teacher Grade')
+        verbose_name_plural = _('Teacher Grades')
+        ordering = ('sort_order',)
