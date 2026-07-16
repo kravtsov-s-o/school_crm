@@ -2,7 +2,7 @@ import timezone_field
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
@@ -18,21 +18,15 @@ class User(AbstractUser):
         verbose_name=_("Avatar"),
     )
     timezone = timezone_field.TimeZoneField(
-        default=settings.TIME_ZONE,
-        verbose_name=_("Timezone")
+        default=settings.TIME_ZONE, verbose_name=_("Timezone")
     )
     is_student = models.BooleanField(default=False, verbose_name=_("Student"))
     is_teacher = models.BooleanField(default=False, verbose_name=_("Teacher"))
     phone = PhoneNumberField(
-        unique=True,
-        null=True,
-        blank=True,
-        verbose_name=_("Phone"))
+        unique=True, null=True, blank=True, verbose_name=_("Phone")
+    )
     telegram_id = models.BigIntegerField(
-        unique=True,
-        null=True,
-        blank=True,
-        verbose_name=_("Telegram ID")
+        unique=True, null=True, blank=True, verbose_name=_("Telegram ID")
     )
 
     USERNAME_FIELD = "email"
@@ -89,8 +83,12 @@ class Student(User):
 
 class TeacherProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    languages = models.ManyToManyField('school_settings.Language', verbose_name=_("Languages"))
-    lesson_types = models.ManyToManyField('school_settings.LessonType', verbose_name=_("Lesson Type"))
+    languages = models.ManyToManyField(
+        "school_settings.Language", verbose_name=_("Languages")
+    )
+    lesson_types = models.ManyToManyField(
+        "school_settings.LessonType", verbose_name=_("Lesson Type")
+    )
     experience_since = models.PositiveSmallIntegerField(
         blank=True,
         null=True,
@@ -98,28 +96,29 @@ class TeacherProfile(models.Model):
         validators=[
             MinValueValidator(1900),
             MaxValueValidator(2100),
-        ]
+        ],
     )
     about_me = models.TextField(blank=True, verbose_name=_("About Me"))
     grade = models.ForeignKey(
-        'school_settings.TeacherGrade',
+        "school_settings.TeacherGrade",
         null=True,
         on_delete=models.PROTECT,
-        related_name='profiles',
-        verbose_name=_('Grade')
+        related_name="profiles",
+        verbose_name=_("Grade"),
     )
     currency = models.ForeignKey(
         "school_settings.Currency",
         null=True,
         on_delete=models.PROTECT,
-        verbose_name=_('Currency')
+        verbose_name=_("Currency"),
     )
     account = models.OneToOneField(
         "finance.Account",
-        null=True, blank=True,
+        null=True,
+        blank=True,
         on_delete=models.PROTECT,
         related_name="teacher_profile",
-        verbose_name=_('Account')
+        verbose_name=_("Account"),
     )
     is_active = models.BooleanField(default=True, verbose_name=_("Active"))
 
@@ -135,34 +134,44 @@ class TeacherProfile(models.Model):
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    teacher = models.ForeignKey(TeacherProfile, null=True, related_name='students', on_delete=models.PROTECT)
-    languages = models.ManyToManyField('school_settings.Language', verbose_name=_("Languages"))
+    teacher = models.ForeignKey(
+        TeacherProfile, null=True, related_name="students", on_delete=models.PROTECT
+    )
+    languages = models.ManyToManyField(
+        "school_settings.Language", verbose_name=_("Languages")
+    )
     currency = models.ForeignKey(
         "school_settings.Currency",
         null=True,
         on_delete=models.PROTECT,
-        verbose_name=_('Currency')
+        verbose_name=_("Currency"),
     )
     account = models.OneToOneField(
         "finance.Account",
-        null=True, blank=True,
+        null=True,
+        blank=True,
         on_delete=models.PROTECT,
         related_name="student_profile",
-        verbose_name=_('Account')
+        verbose_name=_("Account"),
     )
     company = models.ForeignKey(
-        'companies.Company',
-        null=True, blank=True,
+        "companies.Company",
+        null=True,
+        blank=True,
         on_delete=models.PROTECT,
         related_name="students",
-        verbose_name=_('Company')
+        verbose_name=_("Company"),
     )
     personal_plan = models.ForeignKey(
-        'pricing.PersonalPlan',
-        null=True, blank=True,
+        "pricing.PersonalPlan",
+        null=True,
+        blank=True,
         on_delete=models.PROTECT,
-        verbose_name=_('Personal Plan'),
-        help_text=_('The personal plan for this User. If User price must be different from the school plan.'),
+        verbose_name=_("Personal Plan"),
+        help_text=_(
+            "The personal plan for this User. "
+            "If User price must be different from the school plan."
+        ),
     )
     is_active = models.BooleanField(default=True, verbose_name=_("Active"))
 
@@ -177,16 +186,26 @@ class StudentProfile(models.Model):
 
     def clean(self):
         if self.personal_plan and self.personal_plan.currency_id != self.currency_id:
-            raise ValidationError({
-                'personal_plan': _('Plan currency must match Student currency.'),
-            })
+            raise ValidationError(
+                {
+                    "personal_plan": _("Plan currency must match Student currency."),
+                }
+            )
 
-        if self.company and self.personal_plan and self.company.personal_plan_id != self.personal_plan_id:
-            raise ValidationError({
-                'personal_plan': _('Student plan must match Company plan.'),
-            })
+        if (
+            self.company
+            and self.personal_plan
+            and self.company.personal_plan_id != self.personal_plan_id
+        ):
+            raise ValidationError(
+                {
+                    "personal_plan": _("Student plan must match Company plan."),
+                }
+            )
 
         if self.company and self.company.currency_id != self.currency_id:
-            raise ValidationError({
-                'currency': _('Student currency must match Company currency.'),
-            })
+            raise ValidationError(
+                {
+                    "currency": _("Student currency must match Company currency."),
+                }
+            )

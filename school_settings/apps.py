@@ -3,5 +3,5 @@ from django.utils.translation import gettext_lazy as _
 
 
 class SchoolSettingsConfig(AppConfig):
-    name = 'school_settings'
-    verbose_name = _('School Settings')
+    name = "school_settings"
+    verbose_name = _("School Settings")

@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from users.models import User, Student, Teacher, StudentProfile, TeacherProfile
+from users.models import Student, StudentProfile, Teacher, TeacherProfile, User
 
 
 @receiver(post_save, sender=User)

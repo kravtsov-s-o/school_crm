@@ -1,5 +1,4 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from core._mixins import TimeStampMixin
@@ -21,14 +20,14 @@ class Account(TimeStampMixin):
 
     @property
     def owner(self):
-        for name in ('student_profile', 'teacher_profile', 'company'):
+        for name in ("student_profile", "teacher_profile", "company"):
             try:
                 return getattr(self, name)
-            except ObjectDoesNotExist:
+            except ObjectDoesNotExist:  # noqa: S112 — штатный "владелец не привязан"
                 continue
         return None
 
     class Meta:
-        verbose_name = _('Account')
-        verbose_name_plural = _('Accounts')
-        ordering = ['-created_at']
+        verbose_name = _("Account")
+        verbose_name_plural = _("Accounts")
+        ordering = ["-created_at"]

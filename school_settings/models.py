@@ -1,15 +1,15 @@
 from django.db import models
-from django.db.models import CheckConstraint, UniqueConstraint, Q, F
+from django.db.models import CheckConstraint, F, Q, UniqueConstraint
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from core._mixins import TimeStampMixin, SystemRecordMixin
+from core._mixins import SystemRecordMixin, TimeStampMixin
 
 
 # Create your models here.
 class Language(TimeStampMixin, SystemRecordMixin):
-    name = models.CharField(unique=True, max_length=100, verbose_name=_('Name'))
-    is_active = models.BooleanField(default=True, verbose_name=_('Active'))
+    name = models.CharField(unique=True, max_length=100, verbose_name=_("Name"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Active"))
 
     def __str__(self):
         return self.name
@@ -18,24 +18,24 @@ class Language(TimeStampMixin, SystemRecordMixin):
         return self.__str__()
 
     class Meta:
-        verbose_name = _('Language')
-        verbose_name_plural = _('Languages')
-        ordering = ('-is_active', 'name')
+        verbose_name = _("Language")
+        verbose_name_plural = _("Languages")
+        ordering = ("-is_active", "name")
 
         constraints = [
             UniqueConstraint(
-                fields=['is_system'],
+                fields=["is_system"],
                 condition=Q(is_system=True),
-                name='unique_system_language',
+                name="unique_system_language",
             ),
         ]
 
 
 class Currency(TimeStampMixin, SystemRecordMixin):
-    code = models.CharField(unique=True, max_length=4, verbose_name=_('Code'))
-    name = models.CharField(max_length=100, verbose_name=_('Name'))
-    symbol = models.CharField(max_length=2, null=True, blank=True, verbose_name=_('Symbol'))
-    is_active = models.BooleanField(default=True, verbose_name=_('Active'))
+    code = models.CharField(unique=True, max_length=4, verbose_name=_("Code"))
+    name = models.CharField(max_length=100, verbose_name=_("Name"))
+    symbol = models.CharField(max_length=2, blank=True, verbose_name=_("Symbol"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Active"))
 
     def __str__(self):
         return self.code
@@ -44,23 +44,28 @@ class Currency(TimeStampMixin, SystemRecordMixin):
         return self.__str__()
 
     class Meta:
-        verbose_name = _('Currency')
-        verbose_name_plural = _('Currencies')
-        ordering = ('-is_active', 'name')
+        verbose_name = _("Currency")
+        verbose_name_plural = _("Currencies")
+        ordering = ("-is_active", "name")
 
         constraints = [
             UniqueConstraint(
-                fields=['is_system'],
+                fields=["is_system"],
                 condition=Q(is_system=True),
-                name='unique_system_currency',
+                name="unique_system_currency",
             ),
         ]
 
 
 class ExchangeRate(TimeStampMixin):
-    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, related_name='rates', verbose_name=_('Currency'))
-    rate = models.DecimalField(max_digits=18, decimal_places=8, verbose_name=_('Rate'))
-    date = models.DateField(verbose_name=_('Date'))
+    currency = models.ForeignKey(
+        Currency,
+        on_delete=models.PROTECT,
+        related_name="rates",
+        verbose_name=_("Currency"),
+    )
+    rate = models.DecimalField(max_digits=18, decimal_places=8, verbose_name=_("Rate"))
+    date = models.DateField(verbose_name=_("Date"))
 
     def __str__(self):
         return f"{self.currency.code} {self.rate} ({self.date})"
@@ -69,20 +74,20 @@ class ExchangeRate(TimeStampMixin):
         return self.__str__()
 
     class Meta:
-        verbose_name = _('Exchange Rate')
-        verbose_name_plural = _('Exchange Rates')
-        ordering = ('-date', 'currency__code')
+        verbose_name = _("Exchange Rate")
+        verbose_name_plural = _("Exchange Rates")
+        ordering = ("-date", "currency__code")
         constraints = [
             UniqueConstraint(
-                fields=['currency', 'date'],
-                name='unique_rate_per_currency_per_date',
+                fields=["currency", "date"],
+                name="unique_rate_per_currency_per_date",
             )
         ]
 
 
 class Duration(TimeStampMixin, SystemRecordMixin):
-    minutes = models.PositiveSmallIntegerField(unique=True, verbose_name=_('Minutes'))
-    is_active = models.BooleanField(default=True, verbose_name=_('Active'))
+    minutes = models.PositiveSmallIntegerField(unique=True, verbose_name=_("Minutes"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Active"))
 
     def __str__(self):
         return f"{self.minutes} min"
@@ -91,38 +96,45 @@ class Duration(TimeStampMixin, SystemRecordMixin):
         return self.__str__()
 
     class Meta:
-        verbose_name = _('Duration')
-        verbose_name_plural = _('Durations')
-        ordering = ('-is_active', 'minutes')
+        verbose_name = _("Duration")
+        verbose_name_plural = _("Durations")
+        ordering = ("-is_active", "minutes")
 
         constraints = [
             UniqueConstraint(
-                fields=['is_system'],
+                fields=["is_system"],
                 condition=Q(is_system=True),
-                name='unique_system_duration',
+                name="unique_system_duration",
             ),
         ]
 
 
 class LessonType(TimeStampMixin):
-    name = models.CharField(unique=True, max_length=100, verbose_name=_('Name'))
+    name = models.CharField(unique=True, max_length=100, verbose_name=_("Name"))
     min_participants = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
-        verbose_name=_('Min. Participants'),
-        help_text=mark_safe(_('Leave blank for "Individual" lesson type')))
+        verbose_name=_("Min. Participants"),
+        help_text=_('Leave blank for "Individual" lesson type'),
+    )
     max_participants = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
-        verbose_name=_('Max. Participants'),
-        help_text=mark_safe(_('Leave blank for "Individual" lesson type')))
+        verbose_name=_("Max. Participants"),
+        help_text=_('Leave blank for "Individual" lesson type'),
+    )
     duration_affects_price = models.BooleanField(
         default=True,
-        verbose_name=_('Duration Affects Price'),
-        help_text=mark_safe(_('If enabled, duration is part of the price key: <br>'
-                              '45 and 60 min are priced differently. If disabled, price does not depend on duration.')),
+        verbose_name=_("Duration Affects Price"),
+        help_text=mark_safe(  # noqa: S308 — статичная строка, XSS невозможен
+            _(
+                "If enabled, duration is part of the price key: <br>"
+                "45 and 60 min are priced differently. "
+                "If disabled, price does not depend on duration."
+            )
+        ),
     )
-    is_active = models.BooleanField(default=True, verbose_name=_('Active'))
+    is_active = models.BooleanField(default=True, verbose_name=_("Active"))
 
     def __str__(self):
         return self.name
@@ -131,22 +143,24 @@ class LessonType(TimeStampMixin):
         return self.__str__()
 
     class Meta:
-        verbose_name = _('Lesson Type')
-        verbose_name_plural = _('Lesson Types')
-        ordering = ('-is_active', 'name')
+        verbose_name = _("Lesson Type")
+        verbose_name_plural = _("Lesson Types")
+        ordering = ("-is_active", "name")
 
         constraints = [
             CheckConstraint(
-                condition=Q(max_participants__gte=F('min_participants')),
-                name='lessontype_max_gte_min',
+                condition=Q(max_participants__gte=F("min_participants")),
+                name="lessontype_max_gte_min",
             ),
         ]
 
 
 class TeacherGrade(TimeStampMixin):
-    name = models.CharField(unique=True, max_length=100, verbose_name=_('Name'))
-    sort_order = models.PositiveSmallIntegerField(default=0, verbose_name=_('Sort Order'))
-    is_active = models.BooleanField(default=True, verbose_name=_('Active'))
+    name = models.CharField(unique=True, max_length=100, verbose_name=_("Name"))
+    sort_order = models.PositiveSmallIntegerField(
+        default=0, verbose_name=_("Sort Order")
+    )
+    is_active = models.BooleanField(default=True, verbose_name=_("Active"))
 
     def __str__(self):
         return self.name
@@ -155,6 +169,6 @@ class TeacherGrade(TimeStampMixin):
         return self.__str__()
 
     class Meta:
-        verbose_name = _('Teacher Grade')
-        verbose_name_plural = _('Teacher Grades')
-        ordering = ('sort_order',)
+        verbose_name = _("Teacher Grade")
+        verbose_name_plural = _("Teacher Grades")
+        ordering = ("sort_order",)

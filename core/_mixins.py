@@ -6,15 +6,15 @@ from core._helpers import SystemProtectedQuerySet
 
 
 class TimeStampMixin(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Created At'))
-    updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Updated At'))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Created At"))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Updated At"))
 
     class Meta:
         abstract = True
 
 
 class SystemRecordMixin(models.Model):
-    is_system = models.BooleanField(default=False, verbose_name=_('System'))
+    is_system = models.BooleanField(default=False, verbose_name=_("System"))
 
     objects = SystemProtectedQuerySet.as_manager()
 
@@ -23,12 +23,14 @@ class SystemRecordMixin(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk:
-            old = type(self).objects.only('is_system').get(pk=self.pk)
+            old = type(self).objects.only("is_system").get(pk=self.pk)
             if old.is_system != self.is_system:
-                raise ValidationError({'is_system': _('System flag cannot be changed.')})
+                raise ValidationError(
+                    {"is_system": _("System flag cannot be changed.")}
+                )
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         if self.is_system:
-            raise ValidationError(_('System record cannot be deleted.'))
+            raise ValidationError(_("System record cannot be deleted."))
         return super().delete(*args, **kwargs)

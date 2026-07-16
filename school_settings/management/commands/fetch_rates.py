@@ -6,10 +6,11 @@ from django.core.management import BaseCommand, CommandError
 
 from school_settings.models import Currency, ExchangeRate
 
+
 # Work with command manual
 # poetry run python manage.py fetch_rates
 class Command(BaseCommand):
-    help = 'Fetch daily NBU exchange rates'
+    help = "Fetch daily NBU exchange rates"
 
     def get_currencies(self):
         return Currency.objects.filter(is_active=True, is_system=False)
@@ -29,22 +30,28 @@ class Command(BaseCommand):
             by_code = {c.code: c for c in currencies}
 
             for item in data:
-                currency = by_code.get(item['CurrencyCodeL'])
+                currency = by_code.get(item["CurrencyCodeL"])
                 if not currency:
                     continue
 
-                rate = Decimal(str(item['Amount'])) / item['Units']
-                date = datetime.strptime(item['StartDate'], '%d.%m.%Y').date()
+                rate = Decimal(str(item["Amount"])) / item["Units"]
+                date = datetime.strptime(item["StartDate"], "%d.%m.%Y").date()  # noqa: DTZ007
 
-                currency_rates.append(ExchangeRate(
-                    currency=currency,
-                    rate=rate,
-                    date=date,
-                ))
+                currency_rates.append(
+                    ExchangeRate(
+                        currency=currency,
+                        rate=rate,
+                        date=date,
+                    )
+                )
 
-            ExchangeRate.objects.bulk_create(currency_rates, update_conflicts=True, update_fields=['rate', 'updated_at'], unique_fields=['currency', 'date'])
-            self.stdout.write(self.style.SUCCESS(f'Saved {len(currency_rates)} rates'))
-
+            ExchangeRate.objects.bulk_create(
+                currency_rates,
+                update_conflicts=True,
+                update_fields=["rate", "updated_at"],
+                unique_fields=["currency", "date"],
+            )
+            self.stdout.write(self.style.SUCCESS(f"Saved {len(currency_rates)} rates"))
 
         except requests.exceptions.RequestException as e:
-            raise CommandError(f"Request error: {e}")
+            raise CommandError(f"Request error: {e}") from e

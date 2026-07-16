@@ -3,7 +3,7 @@ from django.dispatch import receiver
 
 from companies.models import Company
 from finance.models import Account
-from users.models import TeacherProfile, StudentProfile
+from users.models import StudentProfile, TeacherProfile
 
 
 @receiver(post_save, sender=Company)
@@ -12,4 +12,4 @@ from users.models import TeacherProfile, StudentProfile
 def create_account(sender, instance, created, **kwargs):
     if instance.account_id is None:
         instance.account = Account.objects.create()
-        instance.save(update_fields=['account'])
+        instance.save(update_fields=["account"])
