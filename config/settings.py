@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "finance",
     "companies",
     "users",
+    "lessons",
 ]
 
 MIDDLEWARE = [
