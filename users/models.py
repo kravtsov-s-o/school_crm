@@ -173,6 +173,9 @@ class StudentProfile(models.Model):
             "If User price must be different from the school plan."
         ),
     )
+    meeting_url = models.URLField(
+        max_length=255, blank=True, verbose_name=_("Meeting URL")
+    )
     is_active = models.BooleanField(default=True, verbose_name=_("Active"))
 
     def __str__(self):
