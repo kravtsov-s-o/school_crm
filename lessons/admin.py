@@ -26,8 +26,9 @@ class LessonAdmin(admin.ModelAdmin):
         "students",
     )
     search_fields = (
-        "teacher__first_name",
-        "teacher__last_name",
+        "teacher__user__first_name",
+        "teacher__user__last_name",
+        "teacher__user__email",
         "topic",
         "notes",
         "homework",
