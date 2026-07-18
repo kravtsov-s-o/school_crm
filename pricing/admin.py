@@ -50,6 +50,7 @@ class BasePriceAdmin(admin.ModelAdmin):
 
 @admin.register(SchoolPrice)
 class SchoolPriceAdmin(BasePriceAdmin):
+    autocomplete_fields = ("currency", "language")
     inlines = [SchoolPriceRowInline]
 
 
@@ -57,6 +58,7 @@ class SchoolPriceAdmin(BasePriceAdmin):
 class TeacherRateAdmin(BasePriceAdmin):
     list_display = (*BasePriceAdmin.list_display, "grade")
     list_filter = (*BasePriceAdmin.list_filter, "grade")
+    autocomplete_fields = ("currency", "language")
     inlines = [TeacherRateRowInline]
 
 
@@ -66,6 +68,7 @@ class PersonalPlanAdmin(admin.ModelAdmin):
     list_filter = ("currency", "language", "lesson_type", "duration")
     search_fields = ("name",)
     list_select_related = ("currency",)
+    autocomplete_fields = ("currency", "language", "duration")
 
     @admin.display(description=_("Price"))
     def price(self, obj):

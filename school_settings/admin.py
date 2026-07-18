@@ -38,6 +38,7 @@ class ExchangeRateAdmin(admin.ModelAdmin):
 class DurationAdmin(SystemProtectedAdminMixin, admin.ModelAdmin):
     list_display = ("minutes", "is_system", "is_active")
     list_filter = ("is_system", "is_active")
+    search_fields = ("minutes",)
     ordering = ("minutes",)
 
 

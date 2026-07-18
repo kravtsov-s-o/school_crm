@@ -35,6 +35,7 @@ class LessonAdmin(admin.ModelAdmin):
     )
     readonly_fields = ("lesson_price", "lesson_currency")
     filter_horizontal = ("students",)
+    autocomplete_fields = ("students", "teacher", "language", "duration")
 
     @admin.display(description=_("Students"))
     def get_students(self, obj):

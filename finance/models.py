@@ -4,7 +4,7 @@ from django.db.models import Sum
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from core._mixins import TimeStampMixin, SystemRecordMixin
+from core._mixins import SystemRecordMixin, TimeStampMixin
 
 
 # Create your models here.

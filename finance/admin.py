@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from core._helpers import SystemProtectedAdminMixin
-from finance.models import TransactionType, Transaction, Account
+from finance.models import Account, Transaction, TransactionType
 
 
 # Register your models here.
@@ -30,7 +30,7 @@ class TransactionAdmin(admin.ModelAdmin):
     list_display = ("date", "account", "amount", "currency", "lesson", "type")
     list_filter = ("type", "currency", "date")
     list_select_related = ("account", "currency", "type", "lesson")
-    autocomplete_fields = ("account", "lesson")
+    autocomplete_fields = ("account", "lesson", "type", "currency")
 
     def has_change_permission(self, request, obj=None):
         return False

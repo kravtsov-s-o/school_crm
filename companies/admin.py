@@ -18,3 +18,4 @@ class CompanyAdmin(admin.ModelAdmin):
     search_fields = ("name",)
 
     readonly_fields = ("account",)
+    autocomplete_fields = ("personal_plan", "currency")

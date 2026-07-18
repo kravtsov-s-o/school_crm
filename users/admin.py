@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
-
 from django.utils.translation import gettext_lazy as _
 
 from users.models import Student, StudentProfile, Teacher, TeacherProfile, User
@@ -59,6 +58,13 @@ class StudentProfileInline(admin.StackedInline):
     max_num = 1
 
     readonly_fields = ("account",)
+    autocomplete_fields = (
+        "teacher",
+        "languages",
+        "currency",
+        "company",
+        "personal_plan",
+    )
 
 
 @admin.register(Student)
@@ -73,8 +79,25 @@ class TeacherProfileInline(admin.StackedInline):
     max_num = 1
 
     readonly_fields = ("account",)
+    autocomplete_fields = ("languages", "currency", "lesson_types")
 
 
 @admin.register(Teacher)
 class TeacherAdmin(UserAdmin):
     inlines = (TeacherProfileInline,)
+
+
+@admin.register(StudentProfile)
+class StudentProfileAdmin(admin.ModelAdmin):
+    search_fields = ("user__first_name", "user__last_name", "user__email")
+
+    def has_module_permission(self, request):
+        return False
+
+
+@admin.register(TeacherProfile)
+class TeacherProfileAdmin(admin.ModelAdmin):
+    search_fields = ("user__first_name", "user__last_name", "user__email")
+
+    def has_module_permission(self, request):
+        return False
