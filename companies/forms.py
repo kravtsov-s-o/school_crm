@@ -7,7 +7,7 @@ from companies.models import Company
 class CompanyAdminForm(forms.ModelForm):
     class Meta:
         model = Company
-        fields = "__all__"
+        fields = "__all__"  # noqa: DJ007
 
     def clean(self):
         cleaned = super().clean()

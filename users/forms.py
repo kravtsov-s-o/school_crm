@@ -7,7 +7,7 @@ from users.models import StudentProfile
 class StudentProfileAdminForm(forms.ModelForm):
     class Meta:
         model = StudentProfile
-        fields = '__all__'
+        fields = '__all__'  # noqa: DJ007
 
     def clean(self):
         cleaned = super().clean()
