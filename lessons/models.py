@@ -66,3 +66,14 @@ class Lesson(TimeStampMixin):
         blank=True,
         verbose_name=_("Currency"),
     )
+
+    def __str__(self):
+        return f"{self.topic[:10]}"
+
+    def __repr__(self):
+        return self.__str__()
+
+    class Meta:
+        verbose_name = _("Lesson")
+        verbose_name_plural = _("Lessons")
+        ordering = ("-start_at",)
