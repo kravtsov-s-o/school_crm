@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from pricing.models import (
     PersonalPlan,
+    PersonalPlanRow,
     SchoolPrice,
     SchoolPriceRow,
     TeacherRate,
@@ -23,6 +24,10 @@ class SchoolPriceRowInline(BasePriceRowInline):
 
 class TeacherRateRowInline(BasePriceRowInline):
     model = TeacherRateRow
+
+
+class PersonalPlanRowInline(BasePriceRowInline):
+    model = PersonalPlanRow
 
 
 class BasePriceAdmin(admin.ModelAdmin):
@@ -63,13 +68,7 @@ class TeacherRateAdmin(BasePriceAdmin):
 
 
 @admin.register(PersonalPlan)
-class PersonalPlanAdmin(admin.ModelAdmin):
-    list_display = ("name", "price", "language", "lesson_type", "is_active")
-    list_filter = ("currency", "language", "lesson_type", "duration")
+class PersonalPlanAdmin(BasePriceAdmin):
+    autocomplete_fields = ("currency", "language")
     search_fields = ("name",)
-    list_select_related = ("currency",)
-    autocomplete_fields = ("currency", "language", "duration")
-
-    @admin.display(description=_("Price"))
-    def price(self, obj):
-        return f"{obj.amount} {obj.currency.code}"
+    inlines = [PersonalPlanRowInline]

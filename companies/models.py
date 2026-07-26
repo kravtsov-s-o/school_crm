@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -20,11 +19,9 @@ class Company(TimeStampMixin):
         related_name="company",
         verbose_name=_("Account"),
     )
-    personal_plan = models.ForeignKey(
+    personal_plans = models.ManyToManyField(
         "pricing.PersonalPlan",
-        null=True,
         blank=True,
-        on_delete=models.PROTECT,
         verbose_name=_("Personal Plan"),
         help_text=_(
             "The personal plan for this company."
@@ -43,14 +40,6 @@ class Company(TimeStampMixin):
 
     def __repr__(self):
         return self.__str__()
-
-    def clean(self):
-        if self.personal_plan and self.personal_plan.currency_id != self.currency_id:
-            raise ValidationError(
-                {
-                    "personal_plan": _("Plan currency must match company currency."),
-                }
-            )
 
     class Meta:
         verbose_name = _("Company")

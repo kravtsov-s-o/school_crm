@@ -162,11 +162,9 @@ class StudentProfile(models.Model):
         related_name="students",
         verbose_name=_("Company"),
     )
-    personal_plan = models.ForeignKey(
+    personal_plans = models.ManyToManyField(
         "pricing.PersonalPlan",
-        null=True,
         blank=True,
-        on_delete=models.PROTECT,
         verbose_name=_("Personal Plan"),
         help_text=_(
             "The personal plan for this User. "
@@ -188,24 +186,6 @@ class StudentProfile(models.Model):
         return self.__str__()
 
     def clean(self):
-        if self.personal_plan and self.personal_plan.currency_id != self.currency_id:
-            raise ValidationError(
-                {
-                    "personal_plan": _("Plan currency must match Student currency."),
-                }
-            )
-
-        if (
-            self.company
-            and self.personal_plan
-            and self.company.personal_plan_id != self.personal_plan_id
-        ):
-            raise ValidationError(
-                {
-                    "personal_plan": _("Student plan must match Company plan."),
-                }
-            )
-
         if self.company and self.company.currency_id != self.currency_id:
             raise ValidationError(
                 {

@@ -120,14 +120,21 @@ class TeacherRateRow(AbstractPriceRow):
 
 
 class PersonalPlan(AbstractPrice):
-    duration = models.ForeignKey(
-        "school_settings.Duration", on_delete=models.PROTECT, verbose_name=_("Duration")
-    )
-    amount = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name=_("Amount")
-    )
-
     class Meta(AbstractPrice.Meta):
         verbose_name = _("Personal Plan")
         verbose_name_plural = _("Personal Plans")
         constraints = []
+
+
+class PersonalPlanRow(AbstractPriceRow):
+    plan = models.ForeignKey(
+        PersonalPlan,
+        on_delete=models.CASCADE,
+        related_name="rows",
+        verbose_name=_("Personal Plan"),
+    )
+
+    class Meta(AbstractPriceRow.Meta):
+        verbose_name = _("Personal Plan Row")
+        verbose_name_plural = _("Personal Plan Rows")
+        ordering = ["plan", "duration__minutes"]

@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import gettext_lazy as _
 
+from users.forms import StudentProfileAdminForm
 from users.models import Student, StudentProfile, Teacher, TeacherProfile, User
 
 ADDITIONAL_FIELDSET = (
@@ -53,6 +54,7 @@ class UserAdmin(DjangoUserAdmin):
 
 class StudentProfileInline(admin.StackedInline):
     model = StudentProfile
+    form = StudentProfileAdminForm
     can_delete = False
     min_num = 1
     max_num = 1
@@ -63,7 +65,7 @@ class StudentProfileInline(admin.StackedInline):
         "languages",
         "currency",
         "company",
-        "personal_plan",
+        "personal_plans",
     )
 
 
