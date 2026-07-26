@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+from django.db.models import Sum
 from django.utils.translation import gettext_lazy as _
 
 from users.forms import StudentProfileAdminForm
@@ -72,6 +73,18 @@ class StudentProfileInline(admin.StackedInline):
 @admin.register(Student)
 class StudentAdmin(UserAdmin):
     inlines = (StudentProfileInline,)
+    list_display = UserAdmin.list_display + ("balance", "studentprofile__currency")
+    list_select_related = ("studentprofile__currency",)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.annotate(
+            _balance=Sum("studentprofile__account__transactions__amount")
+        )
+
+    @admin.display(description=_("Balance"), ordering="_balance")
+    def balance(self, obj):
+        return obj._balance or 0
 
 
 class TeacherProfileInline(admin.StackedInline):
@@ -87,6 +100,18 @@ class TeacherProfileInline(admin.StackedInline):
 @admin.register(Teacher)
 class TeacherAdmin(UserAdmin):
     inlines = (TeacherProfileInline,)
+    list_display = UserAdmin.list_display + ("balance", "teacherprofile__currency")
+    list_select_related = ("teacherprofile__currency",)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.annotate(
+            _balance=Sum("teacherprofile__account__transactions__amount")
+        )
+
+    @admin.display(description=_("Balance"), ordering="_balance")
+    def balance(self, obj):
+        return obj._balance or 0
 
 
 @admin.register(StudentProfile)
