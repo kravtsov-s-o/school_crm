@@ -6,12 +6,13 @@ def seed_types(apps, schema_editor):
     TransactionType = apps.get_model("finance", "TransactionType")
     types = [
         ("lesson_charge",    "Lesson charge",    "expense"),
-        ("company_coverage", "Company coverage", "expense"),
-        ("teacher_accrual",  "Teacher accrual",  "income"),
+        ("lesson_refund",    "Lesson refund",    "income"),
+        ("teacher_refund",   "Teacher charge",   "expense"),
+        ("teacher_accrual",  "Teacher refund",   "income"),
+        ("manual_payout",    "Manual payout",    "expense"),
         ("manual_topup",     "Manual top-up",    "income"),
-        ("teacher_payout",   "Teacher payout",   "expense"),
-        ("correction_in",    "Correction +",     "income"),
         ("correction_out",   "Correction −",     "expense"),
+        ("correction_in",    "Correction +",     "income"),
     ]
     for code, name, direction in types:
         TransactionType.objects.update_or_create(
