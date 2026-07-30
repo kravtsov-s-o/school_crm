@@ -7,8 +7,8 @@ def seed_types(apps, schema_editor):
     types = [
         ("lesson_charge",    "Lesson charge",    "expense"),
         ("lesson_refund",    "Lesson refund",    "income"),
-        ("teacher_refund",   "Teacher charge",   "expense"),
-        ("teacher_accrual",  "Teacher refund",   "income"),
+        ("teacher_refund",   "Teacher refund",   "expense"),
+        ("teacher_accrual",  "Teacher accrual",  "income"),
         ("manual_payout",    "Manual payout",    "expense"),
         ("manual_topup",     "Manual top-up",    "income"),
         ("correction_out",   "Correction −",     "expense"),

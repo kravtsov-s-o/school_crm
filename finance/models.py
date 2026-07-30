@@ -4,7 +4,7 @@ from django.db.models import Sum
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from core._mixins import SystemRecordMixin, TimeStampMixin
+from core._mixins import TimeStampMixin
 
 
 # Create your models here.
@@ -35,32 +35,28 @@ class Account(TimeStampMixin):
         ordering = ["-created_at"]
 
 
-class TransactionType(TimeStampMixin, SystemRecordMixin):
-    class Direction(models.TextChoices):
-        INCOME = "income", _("Income")
-        EXPENSE = "expense", _("Expense")
+class TransactionCode(models.TextChoices):
+    LESSON_CHARGE = "lesson_charge", _("Lesson charge")
+    LESSON_REFUND = "lesson_refund", _("Lesson refund")
+    TEACHER_REFUND = "teacher_refund", _("Teacher refund")
+    TEACHER_ACCRUAL = "teacher_accrual", _("Teacher accrual")
+    MANUAL_PAYOUT = "manual_payout", _("Manual payout")
+    MANUAL_TOPUP = "manual_topup", _("Manual top-up")
+    CORRECTION_OUT = "correction_out", _("Correction −")
+    CORRECTION_IN = "correction_in", _("Correction +")
 
-    name = models.CharField(
-        unique=True, max_length=100, verbose_name=_("Transaction Type")
-    )
-    code = models.SlugField(
-        unique=True, max_length=100, verbose_name=_("Transaction Code")
-    )
-    direction = models.CharField(
-        choices=Direction.choices, max_length=10, verbose_name=_("Direction")
-    )
-    is_active = models.BooleanField(default=True, verbose_name=_("Is active"))
-
-    def __str__(self):
-        return self.name
-
-    def __repr__(self):
-        return self.__str__()
-
-    class Meta:
-        verbose_name = _("Transaction Type")
-        verbose_name_plural = _("Transaction Types")
-        ordering = ["name"]
+    @property
+    def direction(self):
+        return {
+            self.LESSON_CHARGE: "expense",
+            self.LESSON_REFUND: "income",
+            self.TEACHER_REFUND: "expense",
+            self.TEACHER_ACCRUAL: "income",
+            self.MANUAL_PAYOUT: "expense",
+            self.MANUAL_TOPUP: "income",
+            self.CORRECTION_OUT: "expense",
+            self.CORRECTION_IN: "income",
+        }[self]
 
 
 class Transaction(TimeStampMixin):
@@ -71,10 +67,9 @@ class Transaction(TimeStampMixin):
         related_name="transactions",
         verbose_name=_("Account"),
     )
-    type = models.ForeignKey(
-        TransactionType,
-        on_delete=models.PROTECT,
-        related_name="transactions",
+    type = models.CharField(
+        choices=TransactionCode.choices,
+        max_length=15,
         verbose_name=_("Transaction Type"),
     )
     amount = models.DecimalField(
@@ -94,7 +89,7 @@ class Transaction(TimeStampMixin):
     comment = models.TextField(blank=True, verbose_name=_("Comment"))
 
     def __str__(self):
-        return f"{self.date} · {self.type.name} · {self.amount} {self.currency.code}"
+        return f"{self.date} · {self.type} · {self.amount} {self.currency.code}"
 
     def __repr__(self):
         return self.__str__()
@@ -104,7 +99,8 @@ class Transaction(TimeStampMixin):
             raise ValidationError(_("Object can't be changed."))
 
         self.amount = abs(self.amount)
-        if self.type.direction == TransactionType.Direction.EXPENSE:
+
+        if TransactionCode(self.type).direction == "expense":
             self.amount = -self.amount
 
         super().save(*args, **kwargs)
