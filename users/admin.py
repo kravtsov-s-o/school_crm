@@ -73,7 +73,7 @@ class StudentProfileInline(admin.StackedInline):
 @admin.register(Student)
 class StudentAdmin(UserAdmin):
     inlines = (StudentProfileInline,)
-    list_display = UserAdmin.list_display + ("balance", "studentprofile__currency")
+    list_display = (*UserAdmin.list_display, "balance", "studentprofile__currency")
     list_select_related = ("studentprofile__currency",)
 
     def get_queryset(self, request):
@@ -100,7 +100,7 @@ class TeacherProfileInline(admin.StackedInline):
 @admin.register(Teacher)
 class TeacherAdmin(UserAdmin):
     inlines = (TeacherProfileInline,)
-    list_display = UserAdmin.list_display + ("balance", "teacherprofile__currency")
+    list_display = (*UserAdmin.list_display, "balance", "teacherprofile__currency")
     list_select_related = ("teacherprofile__currency",)
 
     def get_queryset(self, request):
