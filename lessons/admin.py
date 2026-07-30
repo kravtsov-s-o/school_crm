@@ -37,6 +37,9 @@ class LessonAdmin(admin.ModelAdmin):
     filter_horizontal = ("students",)
     autocomplete_fields = ("students", "teacher", "language", "duration")
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related("students__user")
+
     @admin.display(description=_("Students"))
     def get_students(self, obj):
         return ", ".join([str(item) for item in obj.students.all()])
