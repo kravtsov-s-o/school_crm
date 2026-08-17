@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from core._mixins import TimeStampMixin
+from finance.services import signed_amount
 
 
 # Create your models here.
@@ -98,10 +99,7 @@ class Transaction(TimeStampMixin):
         if self.pk:
             raise ValidationError(_("Object can't be changed."))
 
-        self.amount = abs(self.amount)
-
-        if TransactionCode(self.type).direction == "expense":
-            self.amount = -self.amount
+        self.amount = signed_amount(self.amount, self.type)
 
         super().save(*args, **kwargs)
 
