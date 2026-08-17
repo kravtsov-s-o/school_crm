@@ -44,7 +44,7 @@ class LessonChangeStatus:
             total = Decimal("0.00")
             currency = None
             for student in self.lesson.students.all():
-                student_part, company_part, currency = self.charge_participants(student)
+                student_part, company_part, currency = self.calc_participant_price(student)
                 total += student_part + company_part
                 if student_part:
                     register_transaction(
@@ -68,7 +68,7 @@ class LessonChangeStatus:
 
             self.lesson.save()
 
-    def charge_participants(self, student):
+    def calc_participant_price(self, student):
         student_price = SeatPriceResolver(
             student,
             self.lesson.language,
