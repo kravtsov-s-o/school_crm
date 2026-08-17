@@ -2,7 +2,7 @@
 target-version = "py314"
 
 # MAIN SETTINGS
-line-length = 88
+line-length = 100
 indent-width = 4
 
 # `ruff check` сразу применяет безопасные автофиксы (как с флагом --fix)
