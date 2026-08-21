@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import pytest
 
 
@@ -53,7 +55,18 @@ def grade(db):
 def student(db, currency_uah):
     from users.models import User
     user = User.objects.create(username="s1", email="s1@x.com", is_student=True)
-    profile = user.studentprofile          # сигнал создал профиль
+    profile = user.studentprofile  # сигнал создал профиль
     profile.currency = currency_uah
     profile.save()
     return profile
+
+
+@pytest.fixture
+def plan_usd(currency_usd, language_en, lesson_type_personal, duration_60):
+    from pricing.models import PersonalPlan, PersonalPlanRow
+    plan = PersonalPlan.objects.create(
+        name="Personal USD", currency=currency_usd,
+        language=language_en, lesson_type=lesson_type_personal,
+    )
+    PersonalPlanRow.objects.create(plan=plan, duration=duration_60, amount=Decimal("40"))
+    return plan
