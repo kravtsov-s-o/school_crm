@@ -29,3 +29,9 @@ def lesson_type_personal(db):
 def duration_60(db):
     from school_settings.models import Duration
     return Duration.objects.get(minutes=60)
+
+
+@pytest.fixture
+def account(db):
+    from finance.models import Account
+    return Account.objects.create()
