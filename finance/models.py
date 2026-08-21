@@ -60,6 +60,18 @@ class TransactionCode(models.TextChoices):
         }[self]
 
 
+class AppendOnlyQuerySet(models.QuerySet):
+    def update(self, **kwargs):
+        raise ValidationError(
+            _("Transactions are append-only; update is not allowed.")
+        )
+
+    def delete(self, **kwargs):
+        raise ValidationError(
+            _("Transactions are append-only; delete is not allowed.")
+        )
+
+
 class Transaction(TimeStampMixin):
     date = models.DateField(default=timezone.localdate, verbose_name=_("Date"))
     account = models.ForeignKey(
@@ -88,6 +100,8 @@ class Transaction(TimeStampMixin):
         verbose_name=_("Lesson"),
     )
     comment = models.TextField(blank=True, verbose_name=_("Comment"))
+
+    objects = AppendOnlyQuerySet.as_manager()
 
     def __str__(self):
         return f"{self.date} · {self.type} · {self.amount} {self.currency.code}"
