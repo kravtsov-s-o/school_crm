@@ -5,7 +5,7 @@ import pytest
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 
-from school_settings.models import Language, Currency, LessonType, ExchangeRate, Duration
+from school_settings.models import Currency, Duration, ExchangeRate, Language, LessonType
 
 
 @pytest.mark.django_db
@@ -61,9 +61,9 @@ def test_max_participants_less_than_min_rejected():
 
 @pytest.mark.django_db
 def test_duplicate_rate_per_currency_date_rejected(currency_uah):
-    ExchangeRate.objects.create(currency=currency_uah, rate=Decimal("1"), date=date(2026, 1, 1))
+    ExchangeRate.objects.create(currency=currency_uah, rate=Decimal(1), date=date(2026, 1, 1))
     with pytest.raises(IntegrityError):
-        ExchangeRate.objects.create(currency=currency_uah, rate=Decimal("2"), date=date(2026, 1, 1))
+        ExchangeRate.objects.create(currency=currency_uah, rate=Decimal(2), date=date(2026, 1, 1))
 
 
 @pytest.mark.django_db
