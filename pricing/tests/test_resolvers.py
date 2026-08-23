@@ -215,13 +215,20 @@ def test_seat_uses_company_plan(
         lesson_type_personal,
         duration_60
     ).resolve()
-    assert resolved.amount == Decimal("400")
+    assert resolved.amount == Decimal(400)
     assert resolved.source == "company"
     assert resolved.coverage_percent == 50
 
 
 @pytest.mark.django_db
-def test_company_beats_personal(student, company, personal_plan, language_en, lesson_type_personal, duration_60):
+def test_company_beats_personal(
+        student,
+        company,
+        personal_plan,
+        language_en,
+        lesson_type_personal,
+        duration_60
+):
     student.company = company
     student.save()
     student.personal_plans.add(personal_plan)
