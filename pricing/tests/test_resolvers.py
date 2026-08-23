@@ -3,14 +3,6 @@ from decimal import Decimal
 import pytest
 
 from companies.models import Company
-from pricing.models import (
-    PersonalPlan,
-    PersonalPlanRow,
-    SchoolPrice,
-    SchoolPriceRow,
-    TeacherRate,
-    TeacherRateRow,
-)
 from pricing.services import (
     PriceNotFound,
     SchoolPriceResolver,
@@ -18,22 +10,6 @@ from pricing.services import (
     TeacherRateResolver,
 )
 from school_settings.models import TeacherGrade
-
-
-@pytest.fixture
-def school_price(currency_uah, language_en, lesson_type_personal, duration_60):
-    plan = SchoolPrice.objects.create(
-        name="School UAH",
-        currency=currency_uah,
-        language=language_en,
-        lesson_type=lesson_type_personal,
-    )
-    SchoolPriceRow.objects.create(
-        plan=plan,
-        duration=duration_60,
-        amount=Decimal(500),
-    )
-    return plan
 
 
 @pytest.mark.django_db
@@ -85,19 +61,6 @@ def test_school_resolver_no_duration_raises(
             currency_uah,
             duration_45
         ).resolve()
-
-
-@pytest.fixture
-def teacher_rate(currency_uah, language_en, lesson_type_personal, duration_60, grade):
-    plan = TeacherRate.objects.create(
-        name="Rate Middle",
-        currency=currency_uah,
-        language=language_en,
-        lesson_type=lesson_type_personal,
-        grade=grade,
-    )
-    TeacherRateRow.objects.create(plan=plan, duration=duration_60, amount=Decimal(300))
-    return plan
 
 
 @pytest.mark.django_db
@@ -156,18 +119,6 @@ def test_seat_falls_to_school(
     assert resolved.amount == Decimal(500)
     assert resolved.source == "school"
     assert resolved.coverage_percent is None
-
-
-@pytest.fixture
-def personal_plan(currency_uah, language_en, lesson_type_personal, duration_60):
-    plan = PersonalPlan.objects.create(
-        name="Personal UAH",
-        currency=currency_uah,
-        language=language_en,
-        lesson_type=lesson_type_personal,
-    )
-    PersonalPlanRow.objects.create(plan=plan, duration=duration_60, amount=Decimal(400))
-    return plan
 
 
 @pytest.mark.django_db

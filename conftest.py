@@ -2,6 +2,7 @@ from decimal import Decimal
 
 import pytest
 
+from pricing.models import SchoolPrice, SchoolPriceRow, TeacherRate, TeacherRateRow, PersonalPlan, PersonalPlanRow
 from users.models import User
 
 
@@ -27,6 +28,12 @@ def language_en(db):
 def lesson_type_personal(db):
     from school_settings.models import LessonType
     return LessonType.objects.get(name="Personal")
+
+
+@pytest.fixture
+def lesson_type_group(db):
+    from school_settings.models import LessonType
+    return LessonType.objects.get(name="Small Group")
 
 
 @pytest.fixture
@@ -89,6 +96,15 @@ def teacher_user(db):
 
 
 @pytest.fixture
+def teacher(teacher_user, currency_uah, grade):
+    profile = teacher_user.teacherprofile
+    profile.currency = currency_uah
+    profile.grade = grade
+    profile.save()
+    return profile
+
+
+@pytest.fixture
 def plan_usd(currency_usd, language_en, lesson_type_personal, duration_60):
     from pricing.models import PersonalPlan, PersonalPlanRow
     plan = PersonalPlan.objects.create(
@@ -96,4 +112,45 @@ def plan_usd(currency_usd, language_en, lesson_type_personal, duration_60):
         language=language_en, lesson_type=lesson_type_personal,
     )
     PersonalPlanRow.objects.create(plan=plan, duration=duration_60, amount=Decimal(40))
+    return plan
+
+
+@pytest.fixture
+def school_price(currency_uah, language_en, lesson_type_personal, duration_60):
+    plan = SchoolPrice.objects.create(
+        name="School UAH",
+        currency=currency_uah,
+        language=language_en,
+        lesson_type=lesson_type_personal,
+    )
+    SchoolPriceRow.objects.create(
+        plan=plan,
+        duration=duration_60,
+        amount=Decimal(500),
+    )
+    return plan
+
+
+@pytest.fixture
+def teacher_rate(currency_uah, language_en, lesson_type_personal, duration_60, grade):
+    plan = TeacherRate.objects.create(
+        name="Rate Middle",
+        currency=currency_uah,
+        language=language_en,
+        lesson_type=lesson_type_personal,
+        grade=grade,
+    )
+    TeacherRateRow.objects.create(plan=plan, duration=duration_60, amount=Decimal(300))
+    return plan
+
+
+@pytest.fixture
+def personal_plan(currency_uah, language_en, lesson_type_personal, duration_60):
+    plan = PersonalPlan.objects.create(
+        name="Personal UAH",
+        currency=currency_uah,
+        language=language_en,
+        lesson_type=lesson_type_personal,
+    )
+    PersonalPlanRow.objects.create(plan=plan, duration=duration_60, amount=Decimal(400))
     return plan
