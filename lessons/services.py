@@ -15,11 +15,13 @@ class LessonChangeStatus:
 
     def apply(self):
         CHARGED = {Lesson.Status.CONDUCTED, Lesson.Status.MISSED}
-        old = self.lesson.status
-        entering = old not in CHARGED and self.status in CHARGED
-        leaving = old in CHARGED and self.status not in CHARGED
 
         with transaction.atomic():
+            self.lesson = Lesson.objects.select_for_update().get(pk=self.lesson.pk)
+            old = self.lesson.status
+            entering = old not in CHARGED and self.status in CHARGED
+            leaving = old in CHARGED and self.status not in CHARGED
+
             self.lesson.status = self.status
 
             if entering:
