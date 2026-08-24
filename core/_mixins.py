@@ -14,6 +14,9 @@ class TimeStampMixin(models.Model):
 
 
 class SystemRecordMixin(models.Model):
+    """System records: `is_system` is frozen after creation and the record
+        cannot be deleted (single via delete(), bulk via SystemProtectedQuerySet)."""
+
     is_system = models.BooleanField(default=False, verbose_name=_("System"))
 
     objects = SystemProtectedQuerySet.as_manager()

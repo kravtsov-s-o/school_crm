@@ -12,6 +12,15 @@ logger = logging.getLogger(__name__)
 
 
 class LessonChangeStatus:
+    """Changes one lesson's status and moves money to match the transition.
+
+        Entering a charged state (CONDUCTED/MISSED) charges the students and accrues
+        the teacher; leaving it refunds both. Transitions between two charged states
+        (or between two non-charged) move no money. The lesson row is locked with
+        select_for_update so concurrent status changes can't double-charge.
+        Everything runs in one transaction.
+        """
+
     def __init__(self, lesson, status):
         self.lesson = lesson
         self.status = status
@@ -112,6 +121,10 @@ class LessonChangeStatus:
 
 
 class LessonListChangeStatus:
+    """Applies a status change to a queryset of lessons, each via
+        LessonChangeStatus, all in one transaction (all-or-nothing).
+        Returns the number of lessons actually changed."""
+
     def __init__(self, lessons, status):
         self.lessons = lessons
         self.status = status

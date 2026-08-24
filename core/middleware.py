@@ -2,6 +2,9 @@ from core.logging import set_current_user
 
 
 class CurrentUserMiddleware:
+    """Stashes the request user in a contextvar so CurrentUserFilter can add
+        `user` to every log record. Must be placed after AuthenticationMiddleware."""
+
     def __init__(self, get_response):
         self.get_response = get_response
 

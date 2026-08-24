@@ -4,6 +4,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class SystemProtectedQuerySet(models.QuerySet):
+    """Blocks bulk delete of system records — Model.delete() alone misses QuerySet.delete()."""
+
     def delete(self):
         if self.filter(is_system=True).exists():
             raise ValidationError(_("System records cannot be deleted."))
