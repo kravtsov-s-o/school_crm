@@ -2,26 +2,10 @@ from decimal import Decimal
 
 import pytest
 
-from django.utils import timezone
-
 from companies.models import Company
 from finance.models import Transaction, TransactionCode
 from lessons.models import Lesson
 from lessons.services import LessonChangeStatus
-
-
-@pytest.fixture
-def lesson(teacher, student, school_price, teacher_rate, language_en, lesson_type_personal, duration_60):
-    lesson = Lesson.objects.create(
-        teacher=teacher,
-        language=language_en,
-        lesson_type=lesson_type_personal,
-        duration=duration_60,
-        start_at=timezone.now(),
-        status=Lesson.Status.PLANNED,
-    )
-    lesson.students.add(student)
-    return lesson
 
 
 @pytest.mark.django_db
@@ -32,7 +16,7 @@ def test_conduct_charges_student(lesson, student):
         type=TransactionCode.LESSON_CHARGE
     )
     assert charges.count() == 1
-    assert charges.first().amount == Decimal("-500")
+    assert charges.first().amount == Decimal(-500)
 
 
 @pytest.mark.django_db
@@ -43,22 +27,23 @@ def test_conduct_accrues_teacher(lesson, teacher):
         type=TransactionCode.TEACHER_ACCRUAL
     )
     assert accruals.count() == 1
-    assert accruals.first().amount == Decimal("300")
+    assert accruals.first().amount == Decimal(300)
 
 
 @pytest.mark.django_db
 def test_conduct_freezes_lesson_price(lesson):
     LessonChangeStatus(lesson, Lesson.Status.CONDUCTED).apply()
     lesson.refresh_from_db()
-    assert lesson.lesson_price == Decimal("500")
+    assert lesson.lesson_price == Decimal(500)
     assert lesson.status == Lesson.Status.CONDUCTED
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("coverage, student_amount, company_amount", [
-    (0,   Decimal("-400"), None),
-    (50,  Decimal("-200"), Decimal("-200")),
-    (100, None,            Decimal("-400")),
+@pytest.mark.parametrize(
+    ("coverage", "student_amount", "company_amount"), [
+    (0, Decimal(-400), None),
+    (50, Decimal(-200), Decimal(-200)),
+    (100, None, Decimal(-400)),
 ])
 def test_conduct_splits_coverage(lesson, student, personal_plan, currency_uah,
                                  coverage, student_amount, company_amount):
@@ -123,6 +108,4 @@ def test_lesson_price_sums_all_charges(lesson, student, personal_plan, currency_
     LessonChangeStatus(lesson, Lesson.Status.CONDUCTED).apply()
 
     lesson.refresh_from_db()
-    assert lesson.lesson_price == Decimal("400")
-
-
+    assert lesson.lesson_price == Decimal(400)

@@ -1,8 +1,17 @@
 from decimal import Decimal
 
 import pytest
+from django.utils import timezone
 
-from pricing.models import SchoolPrice, SchoolPriceRow, TeacherRate, TeacherRateRow, PersonalPlan, PersonalPlanRow
+from lessons.models import Lesson
+from pricing.models import (
+    PersonalPlan,
+    PersonalPlanRow,
+    SchoolPrice,
+    SchoolPriceRow,
+    TeacherRate,
+    TeacherRateRow,
+)
 from users.models import User
 
 
@@ -154,3 +163,25 @@ def personal_plan(currency_uah, language_en, lesson_type_personal, duration_60):
     )
     PersonalPlanRow.objects.create(plan=plan, duration=duration_60, amount=Decimal(400))
     return plan
+
+
+@pytest.fixture
+def lesson(
+        teacher,
+        student,
+        school_price,
+        teacher_rate,
+        language_en,
+        lesson_type_personal,
+        duration_60
+):
+    lesson = Lesson.objects.create(
+        teacher=teacher,
+        language=language_en,
+        lesson_type=lesson_type_personal,
+        duration=duration_60,
+        start_at=timezone.now(),
+        status=Lesson.Status.PLANNED,
+    )
+    lesson.students.add(student)
+    return lesson

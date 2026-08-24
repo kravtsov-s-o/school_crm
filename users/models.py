@@ -1,3 +1,5 @@
+import logging
+
 import timezone_field
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager
@@ -6,6 +8,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
+
+logger = logging.getLogger(__name__)
 
 
 # Create your models here.
@@ -44,6 +48,7 @@ class User(AbstractUser):
     def delete(self, *args, **kwargs):
         self.is_active = False
         self.save(update_fields=["is_active"])
+        logger.info("user %s deactivated", self.pk)
 
     class Meta:
         verbose_name = _("User")
