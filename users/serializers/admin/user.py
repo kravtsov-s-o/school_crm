@@ -1,5 +1,3 @@
-from django.contrib.auth.password_validation import validate_password as django_validate_password
-from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
@@ -7,15 +5,7 @@ from rest_framework.validators import UniqueValidator
 from timezone_field.rest_framework import TimeZoneSerializerField
 
 from users.models import User
-
-
-def validate_password_strength(value):
-    """Run a password through Django's ``AUTH_PASSWORD_VALIDATORS``, re-raising
-    any failure as a DRF error (clean 400 instead of a 500)."""
-    try:
-        django_validate_password(value)
-    except DjangoValidationError as e:
-        raise serializers.ValidationError(list(e.messages)) from e
+from users.serializers.common import validate_password_strength
 
 
 class UserAdminSerializer(serializers.ModelSerializer):

@@ -16,6 +16,10 @@ class TeacherViewSet(mixins.CreateModelMixin,
                      mixins.RetrieveModelMixin,
                      mixins.UpdateModelMixin,
                      viewsets.GenericViewSet):
+    """Admin management of teachers — create/list/retrieve/update the whole person
+    (User account + TeacherProfile) in one form. No delete: deactivate via the
+    ``is_teacher`` flag / ``is_active``."""
+
     permission_classes = (IsAdminUser, DjangoModelPermissions)
     queryset = (TeacherProfile.objects
                 .select_related("user", "currency", "account", "grade")

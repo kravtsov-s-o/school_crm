@@ -1,5 +1,7 @@
 from decimal import Decimal
 
+from django.contrib.auth.password_validation import validate_password as django_validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
@@ -58,3 +60,12 @@ class BriefRelatedField(serializers.PrimaryKeyRelatedField):
         if cutoff is not None:
             queryset = queryset[:cutoff]
         return {item.pk: self.display_value(item) for item in queryset}
+
+
+def validate_password_strength(value):
+    """Run a password through Django's ``AUTH_PASSWORD_VALIDATORS``, re-raising
+    any failure as a DRF error (clean 400 instead of a 500)."""
+    try:
+        django_validate_password(value)
+    except DjangoValidationError as e:
+        raise serializers.ValidationError(list(e.messages)) from e

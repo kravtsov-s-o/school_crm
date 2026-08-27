@@ -14,6 +14,8 @@ from users.serializers.common import BalanceSerializerMixin, BriefRelatedField, 
 
 
 class TeacherAdminListSerializer(BalanceSerializerMixin, serializers.ModelSerializer):
+    """Compact teacher row for the admin list — identity plus key columns."""
+
     user = UserBriefSerializer(read_only=True)
     currency = CurrencyBriefSerializer(read_only=True)
     grade = TeacherGradeBriefSerializer(read_only=True)
@@ -24,6 +26,9 @@ class TeacherAdminListSerializer(BalanceSerializerMixin, serializers.ModelSerial
 
 
 class TeacherAdminBaseSerializer(BalanceSerializerMixin, serializers.ModelSerializer):
+    """Shared teacher-profile fields for the admin create/update serializers;
+    FK/M2M exposed as writable brief refs (PK in, ``{id, label}`` out)."""
+
     currency = BriefRelatedField(CurrencyBriefSerializer, queryset=Currency.objects.all())
     languages = BriefRelatedField(LanguageBriefSerializer, many=True,
                                   queryset=Language.objects.all())
@@ -39,6 +44,9 @@ class TeacherAdminBaseSerializer(BalanceSerializerMixin, serializers.ModelSerial
 
 
 class TeacherAdminCreateSerializer(TeacherAdminBaseSerializer):
+    """Admin teacher creation in one form: nested user (with password) + profile.
+    Sets ``is_teacher`` so the signal makes the profile, which ``create()`` fills."""
+
     user = UserAdminCreateSerializer()
 
     @transaction.atomic
@@ -60,6 +68,9 @@ class TeacherAdminCreateSerializer(TeacherAdminBaseSerializer):
 
 
 class TeacherAdminSerializer(TeacherAdminBaseSerializer):
+    """Admin teacher retrieve/update: nested editable user + profile fields,
+    updated together in one atomic call."""
+
     user = UserAdminSerializer()
 
     @transaction.atomic

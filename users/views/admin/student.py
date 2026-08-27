@@ -16,6 +16,10 @@ class StudentViewSet(mixins.CreateModelMixin,
                      mixins.RetrieveModelMixin,
                      mixins.UpdateModelMixin,
                      viewsets.GenericViewSet):
+    """Admin management of students — create/list/retrieve/update the whole person
+    (User account + StudentProfile) in one form. No delete: deactivate via the
+    ``is_student`` flag / ``is_active``."""
+
     permission_classes = (IsAdminUser, DjangoModelPermissions)
     queryset = (StudentProfile.objects
                 .select_related("user", "teacher__user", "currency", "company", "account")
