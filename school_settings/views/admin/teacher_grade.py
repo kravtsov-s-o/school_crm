@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
-from rest_framework.permissions import IsAdminUser, DjangoModelPermissions
+from rest_framework.permissions import DjangoModelPermissions, IsAdminUser
 
 from school_settings.models import TeacherGrade
 from school_settings.serializers.admin.teacher_grade import TeacherGradeAdminSerializer
