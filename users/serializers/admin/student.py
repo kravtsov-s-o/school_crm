@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 from companies.models import Company
@@ -47,6 +48,28 @@ class StudentAdminBaseSerializer(BalanceSerializerMixin, serializers.ModelSerial
         fields = ("id", "user", "teacher", "languages", "company", "personal_plans",
                   "balance", "currency", "meeting_url", "is_active")
         read_only_fields = ("id",)
+
+    def validate(self, attrs):
+        currency = attrs.get("currency", getattr(self.instance, "currency", None))
+        company = attrs.get("company", getattr(self.instance, "company", None))
+
+        if company is not None and currency is not None and company.currency_id != currency.id:
+            raise serializers.ValidationError(
+                {"currency": _("Student currency must match company currency.")}
+            )
+
+        if "personal_plans" in attrs:
+            plans = attrs["personal_plans"]
+        elif self.instance is not None:
+            plans = self.instance.personal_plans.all()
+        else:
+            plans = []
+
+        if currency is not None and any(p.currency_id != currency.id for p in plans):
+            raise serializers.ValidationError(
+                {"personal_plans": _("All plans must match the student currency.")}
+            )
+        return attrs
 
 
 class StudentAdminCreateSerializer(StudentAdminBaseSerializer):
