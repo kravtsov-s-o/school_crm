@@ -1,7 +1,11 @@
 from rest_framework.routers import DefaultRouter
 
 from companies.views.admin.company import CompanyAdminViewSet
-from pricing.views.admin.price import SchoolPriceAdminViewSet, TeacherRateAdminViewSet, PersonalPlanAdminViewSet
+from pricing.views.admin.price import (
+    PersonalPlanAdminViewSet,
+    SchoolPriceAdminViewSet,
+    TeacherRateAdminViewSet,
+)
 from school_settings.views.admin.currency import CurrencyAdminViewSet
 from school_settings.views.admin.duration import DurationAdminViewSet
 from school_settings.views.admin.exchange_rate import ExchangeRateAdminViewSet

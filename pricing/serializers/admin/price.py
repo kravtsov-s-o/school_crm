@@ -1,12 +1,24 @@
 from django.db import transaction
-from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
+from rest_framework import serializers
 
 from core.serializers import BriefRelatedField
-from pricing.models import SchoolPriceRow, TeacherRateRow, PersonalPlanRow, SchoolPrice, TeacherRate, PersonalPlan
-from school_settings.models import Duration, Currency, Language, LessonType, TeacherGrade
-from school_settings.serializers.common import CurrencyBriefSerializer, LanguageBriefSerializer, \
-    LessonTypeBriefSerializer, TeacherGradeBriefSerializer, DurationBriefSerializer
+from pricing.models import (
+    PersonalPlan,
+    PersonalPlanRow,
+    SchoolPrice,
+    SchoolPriceRow,
+    TeacherRate,
+    TeacherRateRow,
+)
+from school_settings.models import Currency, Duration, Language, LessonType, TeacherGrade
+from school_settings.serializers.common import (
+    CurrencyBriefSerializer,
+    DurationBriefSerializer,
+    LanguageBriefSerializer,
+    LessonTypeBriefSerializer,
+    TeacherGradeBriefSerializer,
+)
 
 
 class PriceRowBaseSerializer(serializers.ModelSerializer):

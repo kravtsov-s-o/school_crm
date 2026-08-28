@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from school_settings.models import Currency, Language, LessonType, TeacherGrade, Duration
+from school_settings.models import Currency, Duration, Language, LessonType, TeacherGrade
 
 
 class CurrencyBriefSerializer(serializers.ModelSerializer):

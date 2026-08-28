@@ -1,10 +1,13 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
-from rest_framework.permissions import IsAdminUser, DjangoModelPermissions
+from rest_framework.permissions import DjangoModelPermissions, IsAdminUser
 
-from pricing.models import SchoolPrice, TeacherRate, PersonalPlan
-from pricing.serializers.admin.price import SchoolPriceAdminSerializer, TeacherRateAdminSerializer, \
-    PersonalPlanAdminSerializer
+from pricing.models import PersonalPlan, SchoolPrice, TeacherRate
+from pricing.serializers.admin.price import (
+    PersonalPlanAdminSerializer,
+    SchoolPriceAdminSerializer,
+    TeacherRateAdminSerializer,
+)
 
 
 @extend_schema(tags=["Admin: School Price"])
