@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from core.serializers import BalanceSerializerMixin
 from school_settings.serializers.common import (
     CurrencyBriefSerializer,
     LanguageBriefSerializer,
@@ -7,7 +8,6 @@ from school_settings.serializers.common import (
     TeacherGradeBriefSerializer,
 )
 from users.models import TeacherProfile
-from users.serializers.common import BalanceSerializerMixin
 
 
 class TeacherCabinetSerializer(BalanceSerializerMixin, serializers.ModelSerializer):

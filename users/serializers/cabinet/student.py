@@ -1,10 +1,11 @@
 from rest_framework import serializers
 
 from companies.serializers.common import CompanyBriefSerializer
+from core.serializers import BalanceSerializerMixin
 from pricing.serializers.common import PersonalPlanBriefSerializer
 from school_settings.serializers.common import CurrencyBriefSerializer, LanguageBriefSerializer
 from users.models import StudentProfile
-from users.serializers.common import BalanceSerializerMixin, TeacherBriefSerializer
+from users.serializers.common import TeacherBriefSerializer
 
 
 class StudentCabinetSerializer(BalanceSerializerMixin, serializers.ModelSerializer):

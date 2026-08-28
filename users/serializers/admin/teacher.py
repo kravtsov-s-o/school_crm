@@ -1,6 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
 
+from core.serializers import BalanceSerializerMixin, BriefRelatedField
 from school_settings.models import Currency, Language, LessonType, TeacherGrade
 from school_settings.serializers.common import (
     CurrencyBriefSerializer,
@@ -10,7 +11,7 @@ from school_settings.serializers.common import (
 )
 from users.models import TeacherProfile
 from users.serializers.admin.user import UserAdminCreateSerializer, UserAdminSerializer
-from users.serializers.common import BalanceSerializerMixin, BriefRelatedField, UserBriefSerializer
+from users.serializers.common import UserBriefSerializer
 
 
 class TeacherAdminListSerializer(BalanceSerializerMixin, serializers.ModelSerializer):

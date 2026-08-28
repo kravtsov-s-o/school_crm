@@ -4,18 +4,14 @@ from rest_framework import serializers
 
 from companies.models import Company
 from companies.serializers.common import CompanyBriefSerializer
+from core.serializers import BalanceSerializerMixin, BriefRelatedField
 from pricing.models import PersonalPlan
 from pricing.serializers.common import PersonalPlanBriefSerializer
 from school_settings.models import Currency, Language
 from school_settings.serializers.common import CurrencyBriefSerializer, LanguageBriefSerializer
 from users.models import StudentProfile, TeacherProfile
 from users.serializers.admin.user import UserAdminCreateSerializer, UserAdminSerializer
-from users.serializers.common import (
-    BalanceSerializerMixin,
-    BriefRelatedField,
-    TeacherBriefSerializer,
-    UserBriefSerializer,
-)
+from users.serializers.common import TeacherBriefSerializer, UserBriefSerializer
 
 
 class StudentAdminListSerializer(BalanceSerializerMixin, serializers.ModelSerializer):
