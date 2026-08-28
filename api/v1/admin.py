@@ -1,5 +1,6 @@
 from rest_framework.routers import DefaultRouter
 
+from companies.views.admin.company import CompanyAdminViewSet
 from school_settings.views.admin.currency import CurrencyAdminViewSet
 from school_settings.views.admin.duration import DurationAdminViewSet
 from school_settings.views.admin.exchange_rate import ExchangeRateAdminViewSet
@@ -21,6 +22,8 @@ router.register("exchange-rates", ExchangeRateAdminViewSet, basename="exchange-r
 router.register("durations", DurationAdminViewSet, basename="duration")
 router.register("lesson-types", LessonTypeAdminViewSet, basename="lesson-type")
 router.register("teacher-grades", TeacherGradeAdminViewSet, basename="teacher-grade")
+
+router.register("companies", CompanyAdminViewSet, basename="company")
 
 urlpatterns = [
     *router.urls,
