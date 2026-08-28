@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from school_settings.models import Currency, Language, LessonType, TeacherGrade
+from school_settings.models import Currency, Language, LessonType, TeacherGrade, Duration
 
 
 class CurrencyBriefSerializer(serializers.ModelSerializer):
@@ -28,4 +28,11 @@ class TeacherGradeBriefSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeacherGrade
         fields = ("id", "name")
+        read_only_fields = fields
+
+
+class DurationBriefSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Duration
+        fields = ("id", "minutes")
         read_only_fields = fields
