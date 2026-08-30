@@ -2,7 +2,7 @@ from django.contrib.auth.password_validation import validate_password as django_
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers
 
-from users.models import TeacherProfile, User
+from users.models import StudentProfile, TeacherProfile, User
 
 
 class UserBriefSerializer(serializers.ModelSerializer):
@@ -24,6 +24,17 @@ class TeacherBriefSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TeacherProfile
+        fields = ("id", "full_name")
+        read_only_fields = fields
+
+
+class StudentBriefSerializer(serializers.ModelSerializer):
+    """Compact read-only reference to a student — profile id + name."""
+
+    full_name = serializers.CharField(source="user.get_full_name", read_only=True)
+
+    class Meta:
+        model = StudentProfile
         fields = ("id", "full_name")
         read_only_fields = fields
 

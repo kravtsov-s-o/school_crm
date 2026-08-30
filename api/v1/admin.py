@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from companies.views.admin.company import CompanyAdminViewSet
 from finance.views.admin.account import AccountAdminViewSet
 from finance.views.admin.transaction import TransactionAdminViewSet
+from lessons.views.admin.lesson import LessonAdminViewSet
 from pricing.views.admin.price import (
     PersonalPlanAdminViewSet,
     SchoolPriceAdminViewSet,
@@ -38,6 +39,8 @@ router.register("personal-plans", PersonalPlanAdminViewSet, basename="personal-p
 
 router.register("accounts", AccountAdminViewSet, basename="account")
 router.register("transactions", TransactionAdminViewSet, basename="transaction")
+
+router.register("lessons", LessonAdminViewSet, basename="lesson")
 
 urlpatterns = [
     *router.urls,
