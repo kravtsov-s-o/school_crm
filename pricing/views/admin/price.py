@@ -18,6 +18,9 @@ class SchoolPriceAdminViewSet(viewsets.ModelViewSet):
     queryset = (SchoolPrice.objects
                 .select_related("currency", "language", "lesson_type")
                 .prefetch_related("rows", "rows__duration"))
+    filterset_fields = ("currency", "language", "lesson_type", "is_active")
+    search_fields = ("name", "language__name", "lesson_type__name")
+    ordering_fields = ("name", "language__name", "lesson_type__name", "is_active")
 
 
 @extend_schema(tags=["Admin: Teacher Rate"])
@@ -28,6 +31,9 @@ class TeacherRateAdminViewSet(viewsets.ModelViewSet):
     queryset = (TeacherRate.objects
                 .select_related("currency", "language", "lesson_type", "grade")
                 .prefetch_related("rows", "rows__duration"))
+    filterset_fields = ("currency", "language", "lesson_type", "grade", "is_active")
+    search_fields = ("name", "language__name", "lesson_type__name")
+    ordering_fields = ("name", "language__name", "lesson_type__name", "grade__name", "is_active")
 
 
 @extend_schema(tags=["Admin: Personal Plan"])
@@ -38,3 +44,6 @@ class PersonalPlanAdminViewSet(viewsets.ModelViewSet):
     queryset = (PersonalPlan.objects
                 .select_related("currency", "language", "lesson_type")
                 .prefetch_related("rows", "rows__duration"))
+    filterset_fields = ("currency", "language", "lesson_type", "is_active")
+    search_fields = ("name", "language__name", "lesson_type__name")
+    ordering_fields = ("name", "language__name", "lesson_type__name", "is_active")
