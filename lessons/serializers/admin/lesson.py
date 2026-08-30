@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from core.serializers import BriefRelatedField
 from lessons.models import Lesson
-from school_settings.models import Currency, Duration, Language, LessonType
+from school_settings.models import Duration, Language, LessonType
 from school_settings.serializers.common import (
     CurrencyBriefSerializer,
     DurationBriefSerializer,
