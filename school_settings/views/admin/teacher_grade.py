@@ -13,3 +13,6 @@ class TeacherGradeAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser, DjangoModelPermissions)
     serializer_class = TeacherGradeAdminSerializer
     queryset = TeacherGrade.objects.all()
+    filterset_fields = ("is_active",)
+    search_fields = ("name",)
+    ordering_fields = ("sort_order", "name", "is_active")

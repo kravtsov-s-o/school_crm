@@ -13,3 +13,6 @@ class LanguageAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser, DjangoModelPermissions)
     serializer_class = LanguageAdminSerializer
     queryset = Language.objects.all()
+    filterset_fields = ("is_active",)
+    search_fields = ("name",)
+    ordering_fields = ("name", "is_active")

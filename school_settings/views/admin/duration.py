@@ -13,3 +13,5 @@ class DurationAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser, DjangoModelPermissions)
     serializer_class = DurationAdminSerializer
     queryset = Duration.objects.all()
+    filterset_fields = ("is_active",)
+    ordering_fields = ("minutes", "is_active")

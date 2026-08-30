@@ -13,3 +13,8 @@ class LessonTypeAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser, DjangoModelPermissions)
     serializer_class = LessonTypeAdminSerializer
     queryset = LessonType.objects.all()
+    filterset_fields = ("duration_affects_price", "is_active",)
+    search_fields = ("name",)
+    ordering_fields = ("name", "min_participants",
+                       "max_participants", "duration_affects_price",
+                       "is_active")

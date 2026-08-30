@@ -14,3 +14,5 @@ class ExchangeRateAdminViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (IsAdminUser, DjangoModelPermissions)
     serializer_class = ExchangeRateAdminSerializer
     queryset = ExchangeRate.objects.all()
+    filterset_fields = ("currency",)
+    ordering_fields = ("date", "currency__code")

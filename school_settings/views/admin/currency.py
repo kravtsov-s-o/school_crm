@@ -14,3 +14,6 @@ class CurrencyAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser, DjangoModelPermissions)
     serializer_class = CurrencyAdminSerializer
     queryset = Currency.objects.all()
+    filterset_fields = ("is_active",)
+    search_fields = ("code", "name")
+    ordering_fields = ("code", "name", "is_active")
