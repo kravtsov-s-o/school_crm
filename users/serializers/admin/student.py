@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from companies.models import Company
 from companies.serializers.common import CompanyBriefSerializer
-from core.serializers import BalanceSerializerMixin, BriefRelatedField
+from core.serializers import BriefRelatedField
 from pricing.models import PersonalPlan
 from pricing.serializers.common import PersonalPlanBriefSerializer
 from school_settings.models import Currency, Language
@@ -14,19 +14,20 @@ from users.serializers.admin.user import UserAdminCreateSerializer, UserAdminSer
 from users.serializers.common import TeacherBriefSerializer, UserBriefSerializer
 
 
-class StudentAdminListSerializer(BalanceSerializerMixin, serializers.ModelSerializer):
+class StudentAdminListSerializer(serializers.ModelSerializer):
     """Compact student row for the admin list — identity plus key columns."""
 
     user = UserBriefSerializer(read_only=True)
     teacher = TeacherBriefSerializer(read_only=True)
     currency = CurrencyBriefSerializer(read_only=True)
+    balance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
     class Meta:
         model = StudentProfile
         fields = ("id", "user", "teacher", "balance", "currency", "is_active")
 
 
-class StudentAdminBaseSerializer(BalanceSerializerMixin, serializers.ModelSerializer):
+class StudentAdminBaseSerializer(serializers.ModelSerializer):
     """Shared student-profile fields for the admin create/update serializers;
     FK/M2M exposed as writable brief refs (PK in, ``{id, label}`` out)."""
 
@@ -38,6 +39,7 @@ class StudentAdminBaseSerializer(BalanceSerializerMixin, serializers.ModelSerial
     teacher = BriefRelatedField(TeacherBriefSerializer, queryset=TeacherProfile.objects.all())
     personal_plans = BriefRelatedField(PersonalPlanBriefSerializer, required=False, many=True,
                                        queryset=PersonalPlan.objects.all())
+    balance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
     class Meta:
         model = StudentProfile

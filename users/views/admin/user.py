@@ -23,6 +23,9 @@ class UserAdminViewSet(viewsets.ModelViewSet):
     queryset = (User.objects.all()
                 .prefetch_related("groups", "user_permissions")
                 .order_by("-is_active", "first_name", "last_name"))
+    filterset_fields = ("is_active", "is_staff", "is_superuser", "is_student", "is_teacher")
+    search_fields = ("email", "username", "first_name", "last_name")
+    ordering_fields = ("first_name", "last_name", "email", "username", "is_active")
 
     def get_serializer_class(self):
         if self.action == "create":

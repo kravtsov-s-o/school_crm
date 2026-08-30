@@ -1,7 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from core.serializers import BalanceSerializerMixin, BriefRelatedField
+from core.serializers import BriefRelatedField
 from school_settings.models import Currency, Language, LessonType, TeacherGrade
 from school_settings.serializers.common import (
     CurrencyBriefSerializer,
@@ -14,19 +14,20 @@ from users.serializers.admin.user import UserAdminCreateSerializer, UserAdminSer
 from users.serializers.common import UserBriefSerializer
 
 
-class TeacherAdminListSerializer(BalanceSerializerMixin, serializers.ModelSerializer):
+class TeacherAdminListSerializer(serializers.ModelSerializer):
     """Compact teacher row for the admin list — identity plus key columns."""
 
     user = UserBriefSerializer(read_only=True)
     currency = CurrencyBriefSerializer(read_only=True)
     grade = TeacherGradeBriefSerializer(read_only=True)
+    balance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
     class Meta:
         model = TeacherProfile
         fields = ("id", "user", "grade", "balance", "currency", "is_active")
 
 
-class TeacherAdminBaseSerializer(BalanceSerializerMixin, serializers.ModelSerializer):
+class TeacherAdminBaseSerializer(serializers.ModelSerializer):
     """Shared teacher-profile fields for the admin create/update serializers;
     FK/M2M exposed as writable brief refs (PK in, ``{id, label}`` out)."""
 
@@ -36,6 +37,7 @@ class TeacherAdminBaseSerializer(BalanceSerializerMixin, serializers.ModelSerial
     lesson_types = BriefRelatedField(LessonTypeBriefSerializer, many=True,
                                      queryset=LessonType.objects.all())
     grade = BriefRelatedField(TeacherGradeBriefSerializer, queryset=TeacherGrade.objects.all())
+    balance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
     class Meta:
         model = TeacherProfile
