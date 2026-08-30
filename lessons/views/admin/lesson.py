@@ -6,6 +6,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import DjangoModelPermissions, IsAdminUser
 from rest_framework.response import Response
 
+from lessons.filters import LessonFilter
 from lessons.models import Lesson
 from lessons.serializers.admin.lesson import LessonAdminSerializer, LessonStatusSerializer
 from lessons.services import LessonChangeStatus
@@ -22,7 +23,15 @@ class LessonAdminViewSet(viewsets.ModelViewSet):
     queryset = (Lesson.objects
                 .select_related("teacher__user", "language", "lesson_type",
                                 "duration", "lesson_currency")
-                .prefetch_related("students__user"))
+                .prefetch_related("students__user")
+                .order_by("-start_at")
+                .distinct())
+    filterset_class = LessonFilter
+    search_fields = ("teacher__user__first_name", "teacher__user__last_name",
+                     "students__user__first_name", "students__user__last_name",
+                     "topic")
+    ordering_fields = ("start_at", "status", "duration__minutes",
+                       "lesson_type__name", "teacher__user__last_name")
 
     def perform_destroy(self, instance):
         if instance.status != Lesson.Status.PLANNED:
