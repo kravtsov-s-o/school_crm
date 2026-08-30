@@ -2,20 +2,21 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 from companies.models import Company
-from core.serializers import BalanceSerializerMixin, BriefRelatedField
+from core.serializers import BriefRelatedField
 from pricing.models import PersonalPlan
 from pricing.serializers.common import PersonalPlanBriefSerializer
 from school_settings.models import Currency
 from school_settings.serializers.common import CurrencyBriefSerializer
 
 
-class CompanyAdminSerializer(BalanceSerializerMixin, serializers.ModelSerializer):
+class CompanyAdminSerializer(serializers.ModelSerializer):
     """Admin CRUD for a company — currency, coverage percent, and optional
     personal plans (validated to match the company currency)."""
 
     currency = BriefRelatedField(CurrencyBriefSerializer, queryset=Currency.objects.all())
     personal_plans = BriefRelatedField(PersonalPlanBriefSerializer, required=False, many=True,
                                        queryset=PersonalPlan.objects.all())
+    balance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
     class Meta:
         model = Company
