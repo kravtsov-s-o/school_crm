@@ -6,23 +6,21 @@ from finance.models import Transaction
 from finance.serializers.cabinet.transaction import TransactionCabinetSerializer
 
 
-@extend_schema(tags=["Cabinet: Student Transactions"])
-class StudentTransactionCabinetViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class BaseTransactionCabinetViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = TransactionCabinetSerializer
     filterset_class = TransactionFilter
     ordering_fields = ("date", "type", "currency__code")
 
+
+@extend_schema(tags=["Cabinet: Student Transactions"])
+class StudentTransactionCabinetViewSet(BaseTransactionCabinetViewSet):
     def get_queryset(self):
         return (Transaction.objects.select_related("currency", "lesson")
-                    .filter(account__student_profile__user=self.request.user))
+                .filter(account__student_profile__user=self.request.user))
 
 
 @extend_schema(tags=["Cabinet: Teacher Transactions"])
-class TeacherTransactionCabinetViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    serializer_class = TransactionCabinetSerializer
-    filterset_class = TransactionFilter
-    ordering_fields = ("date", "type", "currency__code")
-
+class TeacherTransactionCabinetViewSet(BaseTransactionCabinetViewSet):
     def get_queryset(self):
         return (Transaction.objects.select_related("currency", "lesson")
-                    .filter(account__teacher_profile__user=self.request.user))
+                .filter(account__teacher_profile__user=self.request.user))
