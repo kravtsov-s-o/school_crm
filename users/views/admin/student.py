@@ -26,8 +26,8 @@ class StudentViewSet(mixins.CreateModelMixin,
 
     permission_classes = (IsAdminUser, DjangoModelPermissions)
     queryset = (StudentProfile.objects
-                .select_related("user", "teacher__user", "currency", "company", "account")
-                .prefetch_related("languages", "personal_plans")
+                .select_related("user", "currency", "company", "account")
+                .prefetch_related("teacher__user", "languages", "personal_plans")
                 .annotate(balance=Coalesce(Sum("account__transactions__amount"), Decimal(0)))
                 .order_by("user__first_name", "user__last_name")
                 .distinct())

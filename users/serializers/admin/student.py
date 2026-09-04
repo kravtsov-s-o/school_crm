@@ -18,7 +18,7 @@ class StudentAdminListSerializer(serializers.ModelSerializer):
     """Compact student row for the admin list — identity plus key columns."""
 
     user = UserBriefSerializer(read_only=True)
-    teacher = TeacherBriefSerializer(read_only=True)
+    teacher = TeacherBriefSerializer(read_only=True, many=True)
     currency = CurrencyBriefSerializer(read_only=True)
     balance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
@@ -36,7 +36,7 @@ class StudentAdminBaseSerializer(serializers.ModelSerializer):
                                   queryset=Language.objects.all())
     company = BriefRelatedField(CompanyBriefSerializer, required=False, allow_null=True,
                                 queryset=Company.objects.all())
-    teacher = BriefRelatedField(TeacherBriefSerializer, queryset=TeacherProfile.objects.all())
+    teacher = BriefRelatedField(TeacherBriefSerializer, many=True, queryset=TeacherProfile.objects.all())
     personal_plans = BriefRelatedField(PersonalPlanBriefSerializer, required=False, many=True,
                                        queryset=PersonalPlan.objects.all())
     balance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
@@ -82,6 +82,7 @@ class StudentAdminCreateSerializer(StudentAdminBaseSerializer):
         user_data["is_student"] = True
         user = self.fields["user"].create(user_data)
 
+        teacher = validated_data.pop("teacher", [])
         languages = validated_data.pop("languages", [])
         plans = validated_data.pop("personal_plans", [])
 
@@ -89,6 +90,7 @@ class StudentAdminCreateSerializer(StudentAdminBaseSerializer):
         for attr, value in validated_data.items():
             setattr(profile, attr, value)
         profile.save()
+        profile.teacher.set(teacher)
         profile.languages.set(languages)
         profile.personal_plans.set(plans)
         return profile

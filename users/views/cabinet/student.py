@@ -14,8 +14,8 @@ class StudentCabinetView(RetrieveAPIView):
 
     def get_object(self):
         profile = (StudentProfile.objects
-                   .select_related("teacher__user", "currency", "company", "account")
-                   .prefetch_related("languages", "personal_plans")
+                   .select_related("currency", "company", "account")
+                   .prefetch_related("teacher__user", "languages", "personal_plans")
                    .filter(user=self.request.user)
                    .first())
 

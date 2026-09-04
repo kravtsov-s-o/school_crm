@@ -139,8 +139,8 @@ class TeacherProfile(models.Model):
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    teacher = models.ForeignKey(
-        TeacherProfile, null=True, related_name="students", on_delete=models.PROTECT
+    teacher = models.ManyToManyField(
+        TeacherProfile, related_name="students", verbose_name=_("Teacher")
     )
     languages = models.ManyToManyField(
         "school_settings.Language", verbose_name=_("Languages")
