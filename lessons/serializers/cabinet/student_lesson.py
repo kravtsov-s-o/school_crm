@@ -10,6 +10,8 @@ from users.serializers.common import StudentBriefSerializer, TeacherBriefSeriali
 
 
 class StudentLessonCabinetSerializer(serializers.ModelSerializer):
+    """Read-only view of a lesson for a student (their own lessons)."""
+
     teacher = TeacherBriefSerializer(read_only=True)
     language = LanguageBriefSerializer(read_only=True)
     lesson_type = LessonTypeBriefSerializer(read_only=True)

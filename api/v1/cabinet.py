@@ -6,6 +6,7 @@ from finance.views.cabinet.transaction import (
     TeacherTransactionCabinetViewSet,
 )
 from lessons.views.cabinet.student_lesson import StudentLessonCabinetViewSet
+from lessons.views.cabinet.teacher_lesson import TeacherLessonCabinetViewSet
 from users.views.cabinet.account import AccountCabinetView
 from users.views.cabinet.password import ChangePasswordView
 from users.views.cabinet.student import StudentCabinetView
@@ -18,6 +19,8 @@ router.register("teacher-transactions", TeacherTransactionCabinetViewSet,
                 basename="teacher-transaction")
 router.register("student-lessons", StudentLessonCabinetViewSet,
                 basename="student-lesson")
+router.register("teacher-lessons", TeacherLessonCabinetViewSet,
+                basename="teacher-lesson")
 
 urlpatterns = [
     path("account/", AccountCabinetView.as_view(), name="account"),

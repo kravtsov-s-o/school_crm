@@ -8,6 +8,8 @@ from lessons.serializers.cabinet.student_lesson import StudentLessonCabinetSeria
 
 @extend_schema(tags=["Cabinet: Student Lesson"])
 class StudentLessonCabinetViewSet(viewsets.ReadOnlyModelViewSet):
+    """The signed-in student's own lessons — read-only list + detail."""
+
     serializer_class = StudentLessonCabinetSerializer
     filterset_class = LessonFilter
     ordering_fields = ("start_at", "status", "duration__minutes",
