@@ -1,9 +1,12 @@
 from rest_framework import serializers
 
 from lessons.models import Lesson
-from school_settings.serializers.common import LanguageBriefSerializer, LessonTypeBriefSerializer, \
-    DurationBriefSerializer
-from users.serializers.common import TeacherBriefSerializer, StudentBriefSerializer
+from school_settings.serializers.common import (
+    DurationBriefSerializer,
+    LanguageBriefSerializer,
+    LessonTypeBriefSerializer,
+)
+from users.serializers.common import StudentBriefSerializer, TeacherBriefSerializer
 
 
 class StudentLessonCabinetSerializer(serializers.ModelSerializer):

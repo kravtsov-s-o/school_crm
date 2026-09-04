@@ -36,7 +36,8 @@ class StudentAdminBaseSerializer(serializers.ModelSerializer):
                                   queryset=Language.objects.all())
     company = BriefRelatedField(CompanyBriefSerializer, required=False, allow_null=True,
                                 queryset=Company.objects.all())
-    teacher = BriefRelatedField(TeacherBriefSerializer, many=True, queryset=TeacherProfile.objects.all())
+    teacher = BriefRelatedField(TeacherBriefSerializer,
+                                many=True, queryset=TeacherProfile.objects.all())
     personal_plans = BriefRelatedField(PersonalPlanBriefSerializer, required=False, many=True,
                                        queryset=PersonalPlan.objects.all())
     balance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
