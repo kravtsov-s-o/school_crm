@@ -33,9 +33,6 @@ DEBUG = bool(env("DEBUG"))
 
 ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
 
-FILES_STORAGE = env("FILES_STORAGE")
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -89,7 +86,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -103,7 +99,6 @@ DATABASES = {
         "PORT": env("DB_PORT"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -122,7 +117,6 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -144,7 +138,6 @@ LANGUAGES = [
 ]
 
 LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -236,3 +229,22 @@ LOGGING = {
         }
     }
 }
+
+FILES_STORAGE = env("FILES_STORAGE")
+
+if FILES_STORAGE == "cloud":
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "bucket_name": env("AWS_STORAGE_BUCKET_NAME"),
+                "region_name": env("AWS_S3_REGION_NAME"),
+            },
+        },
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
+else:
+    STORAGES = {
+        "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
