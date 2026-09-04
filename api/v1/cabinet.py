@@ -8,6 +8,7 @@ from finance.views.cabinet.transaction import (
 from lessons.views.cabinet.student_lesson import StudentLessonCabinetViewSet
 from lessons.views.cabinet.teacher_lesson import TeacherLessonCabinetViewSet
 from users.views.cabinet.account import AccountCabinetView
+from users.views.cabinet.avatar import AvatarCabinetView
 from users.views.cabinet.password import ChangePasswordView
 from users.views.cabinet.student import StudentCabinetView
 from users.views.cabinet.teacher import TeacherCabinetView
@@ -27,6 +28,7 @@ router.register("teacher-cards", TeacherCardCabinetViewSet,
 
 urlpatterns = [
     path("account/", AccountCabinetView.as_view(), name="account"),
+    path("account/avatar/", AvatarCabinetView.as_view(), name="account-avatar"),
     path("student/", StudentCabinetView.as_view()),
     path("teacher/", TeacherCabinetView.as_view()),
     path("change-password/", ChangePasswordView.as_view(), name="change_password"),

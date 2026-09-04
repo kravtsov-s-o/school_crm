@@ -17,7 +17,7 @@ class AccountCabinetSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "email", "first_name", "last_name", "username",
-                  "timezone", "phone",
+                  "timezone", "phone", "avatar",
                   "is_student", "is_teacher", "is_staff", "is_superuser")
         read_only_fields = ("id", "email", "is_student", "is_teacher",
-                            "is_staff", "is_superuser")
+                            "avatar", "is_staff", "is_superuser")
