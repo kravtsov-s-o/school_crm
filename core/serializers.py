@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from drf_spectacular.utils import extend_schema_field
+from nh3 import nh3
 from rest_framework import serializers
 
 
@@ -33,3 +34,8 @@ class BriefRelatedField(serializers.PrimaryKeyRelatedField):
         if cutoff is not None:
             queryset = queryset[:cutoff]
         return {item.pk: self.display_value(item) for item in queryset}
+
+
+class SanitizedHTMLField(serializers.CharField):
+    def to_internal_value(self, data):
+        return nh3.clean(super().to_internal_value(data))

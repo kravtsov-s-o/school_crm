@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from core.serializers import BalanceSerializerMixin
+from core.serializers import BalanceSerializerMixin, SanitizedHTMLField
 from school_settings.serializers.common import (
     CurrencyBriefSerializer,
     LanguageBriefSerializer,
@@ -18,6 +18,7 @@ class TeacherCabinetSerializer(BalanceSerializerMixin, serializers.ModelSerializ
     grade = TeacherGradeBriefSerializer(read_only=True)
     languages = LanguageBriefSerializer(many=True, read_only=True)
     lesson_types = LessonTypeBriefSerializer(many=True, read_only=True)
+    about_me = SanitizedHTMLField(required=False, allow_blank=True)
 
     class Meta:
         model = TeacherProfile

@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.db.models import Sum
 from django.utils.translation import gettext_lazy as _
 
-from users.forms import StudentProfileAdminForm
+from users.forms import StudentProfileAdminForm, TeacherProfileAdminForm
 from users.models import Student, StudentProfile, Teacher, TeacherProfile, User
 
 ADDITIONAL_FIELDSET = (
@@ -92,6 +92,8 @@ class TeacherProfileInline(admin.StackedInline):
     can_delete = False
     min_num = 1
     max_num = 1
+
+    form = TeacherProfileAdminForm
 
     readonly_fields = ("account",)
     autocomplete_fields = ("languages", "currency", "lesson_types")

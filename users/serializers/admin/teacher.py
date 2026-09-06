@@ -1,7 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from core.serializers import BriefRelatedField
+from core.serializers import BriefRelatedField, SanitizedHTMLField
 from school_settings.models import Currency, Language, LessonType, TeacherGrade
 from school_settings.serializers.common import (
     CurrencyBriefSerializer,
@@ -38,6 +38,7 @@ class TeacherAdminBaseSerializer(serializers.ModelSerializer):
                                      queryset=LessonType.objects.all())
     grade = BriefRelatedField(TeacherGradeBriefSerializer, queryset=TeacherGrade.objects.all())
     balance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    about_me = SanitizedHTMLField(required=False, allow_blank=True)
 
     class Meta:
         model = TeacherProfile

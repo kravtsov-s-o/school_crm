@@ -1,0 +1,9 @@
+.quill-holder {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.ql-container.ql-snow {
+    min-height: 15em;
+}

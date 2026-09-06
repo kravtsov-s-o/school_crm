@@ -1,4 +1,4 @@
-from core.serializers import BriefRelatedField
+from core.serializers import BriefRelatedField, SanitizedHTMLField
 from lessons.models import Lesson
 from lessons.serializers.common import BaseLessonSerializer
 from school_settings.models import Duration, Language, LessonType
@@ -22,6 +22,8 @@ class TeacherLessonCabinetSerializer(BaseLessonSerializer):
     duration = BriefRelatedField(DurationBriefSerializer, queryset=Duration.objects.all())
     students = BriefRelatedField(StudentBriefSerializer, many=True,
                                  queryset=StudentProfile.objects.all())
+    notes = SanitizedHTMLField(required=False, allow_blank=True)
+    homework = SanitizedHTMLField(required=False, allow_blank=True)
 
     class Meta:
         model = Lesson

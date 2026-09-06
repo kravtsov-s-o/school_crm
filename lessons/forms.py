@@ -1,6 +1,8 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
+from nh3 import nh3
 
+from core.widgets.quill_admin_widget import QuillAdminWidget
 from lessons.models import Lesson
 
 
@@ -8,6 +10,13 @@ class LessonAdminForm(forms.ModelForm):
     class Meta:
         model = Lesson
         fields = "__all__"  # noqa: DJ007
+        widgets = {"notes": QuillAdminWidget(), "homework": QuillAdminWidget()}
+
+    def clean_notes(self):
+        return nh3.clean(self.cleaned_data.get("notes", ""))
+
+    def clean_homework(self):
+        return nh3.clean(self.cleaned_data.get("homework", ""))
 
     def clean(self):
         cleaned = super().clean()

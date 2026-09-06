@@ -1,7 +1,9 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
+from nh3 import nh3
 
-from users.models import StudentProfile
+from core.widgets.quill_admin_widget import QuillAdminWidget
+from users.models import StudentProfile, TeacherProfile
 
 
 class StudentProfileAdminForm(forms.ModelForm):
@@ -23,3 +25,13 @@ class StudentProfileAdminForm(forms.ModelForm):
                 })
 
         return cleaned
+
+
+class TeacherProfileAdminForm(forms.ModelForm):
+    class Meta:
+        model = TeacherProfile
+        fields = '__all__'
+        widgets = {"about_me": QuillAdminWidget()}
+
+    def clean_about_me(self):
+        return nh3.clean(self.cleaned_data.get("about_me", ""))
