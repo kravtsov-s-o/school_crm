@@ -20,6 +20,9 @@ class StudentTransactionCabinetViewSet(BaseTransactionCabinetViewSet):
     """The signed-in user's own student-account transactions."""
 
     def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return Transaction.objects.none()
+
         return (Transaction.objects.select_related("currency", "lesson")
                 .filter(account__student_profile__user=self.request.user))
 
@@ -29,5 +32,8 @@ class TeacherTransactionCabinetViewSet(BaseTransactionCabinetViewSet):
     """The signed-in user's own teacher-account transactions."""
 
     def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return Transaction.objects.none()
+
         return (Transaction.objects.select_related("currency", "lesson")
                 .filter(account__teacher_profile__user=self.request.user))

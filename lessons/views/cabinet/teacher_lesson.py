@@ -27,6 +27,9 @@ class TeacherLessonCabinetViewSet(viewsets.ModelViewSet):
                        "lesson_type__name", "teacher__user__last_name")
 
     def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return Lesson.objects.none()
+
         return (Lesson.objects.filter(teacher__user=self.request.user)
                 .select_related("teacher__user", "language", "lesson_type", "duration")
                 .prefetch_related("students__user")

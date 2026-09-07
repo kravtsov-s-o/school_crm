@@ -12,6 +12,9 @@ class TeacherCardCabinetViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TeacherCardCabinetSerializer
 
     def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return TeacherProfile.objects.none()
+
         return (TeacherProfile.objects
                 .filter(students__user=self.request.user)
                 .select_related("user")

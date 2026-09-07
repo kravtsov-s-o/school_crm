@@ -34,10 +34,11 @@ class TeacherLessonCabinetSerializer(BaseLessonSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         request = self.context.get("request")
-        if request is not None:
-            self.fields["students"].child_relation.queryset = (
-                request.user.teacherprofile.students.all()
-            )
+
+        if request is not None and request.user.is_authenticated:
+            self.fields['students'].child_relation.queryset \
+                = request.user.teacherprofile.students.all()
+
         if self.instance and getattr(self.instance, "status", None) != Lesson.Status.PLANNED:
             editable = {"topic", "notes", "homework"}
             for name, field in self.fields.items():
