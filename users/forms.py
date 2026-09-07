@@ -30,7 +30,7 @@ class StudentProfileAdminForm(forms.ModelForm):
 class TeacherProfileAdminForm(forms.ModelForm):
     class Meta:
         model = TeacherProfile
-        fields = '__all__'
+        fields = '__all__'  # noqa: DJ007
         widgets = {"about_me": QuillAdminWidget()}
 
     def clean_about_me(self):
