@@ -3,8 +3,10 @@ from rest_framework import viewsets
 
 from lessons.filters import LessonFilter
 from lessons.models import Lesson
-from lessons.serializers.cabinet.student_lesson import StudentLessonCabinetSerializer, \
-    StudentLessonCabinetListSerializer
+from lessons.serializers.cabinet.student_lesson import (
+    StudentLessonCabinetListSerializer,
+    StudentLessonCabinetSerializer,
+)
 
 
 @extend_schema(tags=["Cabinet: Student Lesson"])

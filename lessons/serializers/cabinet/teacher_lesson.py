@@ -36,7 +36,8 @@ class TeacherLessonCabinetSerializer(TeacherLessonCabinetListSerializer):
     homework = SanitizedHTMLField(required=False, allow_blank=True)
 
     class Meta(TeacherLessonCabinetListSerializer.Meta):
-        fields = (*TeacherLessonCabinetListSerializer.Meta.fields, "meeting_url", "notes", "homework")
+        fields = (*TeacherLessonCabinetListSerializer.Meta.fields,
+                  "meeting_url", "notes", "homework")
         read_only_fields = ("id", "status")
 
     def __init__(self, *args, **kwargs):

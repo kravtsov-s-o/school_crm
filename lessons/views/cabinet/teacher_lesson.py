@@ -10,8 +10,10 @@ from core.permissions import IsTeacherUser
 from lessons.filters import LessonFilter
 from lessons.models import Lesson
 from lessons.serializers.admin.lesson import LessonStatusSerializer
-from lessons.serializers.cabinet.teacher_lesson import TeacherLessonCabinetSerializer, \
-    TeacherLessonCabinetListSerializer
+from lessons.serializers.cabinet.teacher_lesson import (
+    TeacherLessonCabinetListSerializer,
+    TeacherLessonCabinetSerializer,
+)
 from lessons.services import LessonChangeStatus
 
 
