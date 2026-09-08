@@ -37,7 +37,7 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
+    "core.apps.SuperuserAdminConfig",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
