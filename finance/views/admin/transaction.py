@@ -16,7 +16,13 @@ class TransactionAdminViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 
     permission_classes = (IsAdminUser, DjangoModelPermissions)
     serializer_class = TransactionAdminSerializer
-    queryset = Transaction.objects.select_related("account", "currency", "lesson")
+    queryset = (Transaction.objects.select_related(
+        "account__student_profile__user",
+        "account__teacher_profile__user",
+        "account__company",
+        "currency",
+        "lesson"
+    ))
     filterset_class = TransactionFilter
     search_fields = (
         "comment",

@@ -4,6 +4,8 @@ from finance.serializers.common import AccountBriefSerializer
 
 
 class AccountAdminSerializer(AccountBriefSerializer):
+    """Admin account view — owner + derived balance (from the queryset annotation)."""
+
     balance = serializers.DecimalField(max_digits=12, decimal_places=2,
                                        read_only=True, source="total_balance")
 

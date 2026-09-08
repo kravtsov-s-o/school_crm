@@ -43,3 +43,19 @@ class LessonAdminSerializer(BaseLessonSerializer):
                   "meeting_url", "topic", "notes", "homework",
                   "lesson_price", "lesson_currency")
         read_only_fields = ("id", "status", "lesson_price", "lesson_currency")
+
+
+class LessonAdminListSerializer(serializers.ModelSerializer):
+    """Compact lesson row for the admin list — no notes/homework/meeting_url."""
+
+    teacher = TeacherBriefSerializer(read_only=True)
+    language = LanguageBriefSerializer(read_only=True)
+    lesson_type = LessonTypeBriefSerializer(read_only=True)
+    duration = DurationBriefSerializer(read_only=True)
+    students = StudentBriefSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Lesson
+        fields = ("id", "teacher", "language", "lesson_type",
+                  "status", "start_at", "duration", "students",
+                  "topic")

@@ -11,10 +11,8 @@ from users.models import StudentProfile
 from users.serializers.common import StudentBriefSerializer, TeacherBriefSerializer
 
 
-class TeacherLessonCabinetSerializer(BaseLessonSerializer):
-    """A teacher's own lesson (create/edit). ``teacher`` is read-only (injected by
-    the view); ``students`` are limited to the teacher's own; once the lesson is no
-    longer PLANNED only ``topic``/``notes``/``homework`` stay editable."""
+class TeacherLessonCabinetListSerializer(BaseLessonSerializer):
+    """A teacher's own lesson list"""
 
     teacher = TeacherBriefSerializer(read_only=True)
     language = BriefRelatedField(LanguageBriefSerializer, queryset=Language.objects.all())
@@ -22,13 +20,23 @@ class TeacherLessonCabinetSerializer(BaseLessonSerializer):
     duration = BriefRelatedField(DurationBriefSerializer, queryset=Duration.objects.all())
     students = BriefRelatedField(StudentBriefSerializer, many=True,
                                  queryset=StudentProfile.objects.all())
-    notes = SanitizedHTMLField(required=False, allow_blank=True)
-    homework = SanitizedHTMLField(required=False, allow_blank=True)
 
     class Meta:
         model = Lesson
         fields = ("id", "teacher", "language", "lesson_type", "status", "start_at",
-                  "duration", "students", "meeting_url", "topic", "notes", "homework")
+                  "duration", "students", "topic")
+
+
+class TeacherLessonCabinetSerializer(TeacherLessonCabinetListSerializer):
+    """A teacher's own lesson (create/edit). ``teacher`` is read-only (injected by
+    the view); ``students`` are limited to the teacher's own; once the lesson is no
+    longer PLANNED only ``topic``/``notes``/``homework`` stay editable."""
+
+    notes = SanitizedHTMLField(required=False, allow_blank=True)
+    homework = SanitizedHTMLField(required=False, allow_blank=True)
+
+    class Meta(TeacherLessonCabinetListSerializer.Meta):
+        fields = (*TeacherLessonCabinetListSerializer.Meta.fields, "meeting_url", "notes", "homework")
         read_only_fields = ("id", "status")
 
     def __init__(self, *args, **kwargs):

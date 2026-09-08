@@ -3,47 +3,28 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 from core.serializers import BriefRelatedField
-from pricing.models import (
-    PersonalPlan,
-    PersonalPlanRow,
-    SchoolPrice,
-    SchoolPriceRow,
-    TeacherRate,
-    TeacherRateRow,
-)
-from school_settings.models import Currency, Duration, Language, LessonType, TeacherGrade
+from school_settings.models import Currency, Duration, Language, LessonType
 from school_settings.serializers.common import (
     CurrencyBriefSerializer,
     DurationBriefSerializer,
     LanguageBriefSerializer,
     LessonTypeBriefSerializer,
-    TeacherGradeBriefSerializer,
 )
 
 
 class PriceRowBaseSerializer(serializers.ModelSerializer):
+    """One price row (duration → amount); base for the per-type row serializers."""
+
     duration = BriefRelatedField(DurationBriefSerializer, queryset=Duration.objects.all())
 
     class Meta:
         fields = ("duration", "amount")
 
 
-class SchoolPriceRowSerializer(PriceRowBaseSerializer):
-    class Meta(PriceRowBaseSerializer.Meta):
-        model = SchoolPriceRow
-
-
-class TeacherRateRowSerializer(PriceRowBaseSerializer):
-    class Meta(PriceRowBaseSerializer.Meta):
-        model = TeacherRateRow
-
-
-class PersonalPlanRowSerializer(PriceRowBaseSerializer):
-    class Meta(PriceRowBaseSerializer.Meta):
-        model = PersonalPlanRow
-
-
 class PriceAdminBaseSerializer(serializers.ModelSerializer):
+    """Shared price-plan fields (currency/language/lesson_type) + nested-rows
+    create/update (replace-all) and duplicate-duration validation."""
+
     currency = BriefRelatedField(CurrencyBriefSerializer, queryset=Currency.objects.all())
     language = BriefRelatedField(LanguageBriefSerializer, queryset=Language.objects.all())
     lesson_type = BriefRelatedField(LessonTypeBriefSerializer, queryset=LessonType.objects.all())
@@ -77,32 +58,3 @@ class PriceAdminBaseSerializer(serializers.ModelSerializer):
         if rows is not None:
             self._sync_rows(plan, rows)
         return plan
-
-
-class SchoolPriceAdminSerializer(PriceAdminBaseSerializer):
-    rows = SchoolPriceRowSerializer(many=True)
-
-    class Meta:
-        model = SchoolPrice
-        fields = ("id", "name", "currency", "language", "lesson_type", "is_active", "rows")
-        read_only_fields = ("id",)
-
-
-class TeacherRateAdminSerializer(PriceAdminBaseSerializer):
-    rows = TeacherRateRowSerializer(many=True)
-    grade = BriefRelatedField(TeacherGradeBriefSerializer, queryset=TeacherGrade.objects.all())
-
-    class Meta:
-        model = TeacherRate
-        fields = ("id", "name", "currency", "language",
-                  "lesson_type", "grade", "is_active", "rows")
-        read_only_fields = ("id",)
-
-
-class PersonalPlanAdminSerializer(PriceAdminBaseSerializer):
-    rows = PersonalPlanRowSerializer(many=True)
-
-    class Meta:
-        model = PersonalPlan
-        fields = ("id", "name", "currency", "language", "lesson_type", "is_active", "rows")
-        read_only_fields = ("id",)

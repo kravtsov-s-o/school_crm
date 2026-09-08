@@ -10,7 +10,8 @@ from core.permissions import IsTeacherUser
 from lessons.filters import LessonFilter
 from lessons.models import Lesson
 from lessons.serializers.admin.lesson import LessonStatusSerializer
-from lessons.serializers.cabinet.teacher_lesson import TeacherLessonCabinetSerializer
+from lessons.serializers.cabinet.teacher_lesson import TeacherLessonCabinetSerializer, \
+    TeacherLessonCabinetListSerializer
 from lessons.services import LessonChangeStatus
 
 
@@ -21,10 +22,14 @@ class TeacherLessonCabinetViewSet(viewsets.ModelViewSet):
     money) go through the change-status action."""
 
     permission_classes = [IsAuthenticated, IsTeacherUser]
-    serializer_class = TeacherLessonCabinetSerializer
     filterset_class = LessonFilter
     ordering_fields = ("start_at", "status", "duration__minutes",
                        "lesson_type__name", "teacher__user__last_name")
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return TeacherLessonCabinetListSerializer
+        return TeacherLessonCabinetSerializer
 
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):

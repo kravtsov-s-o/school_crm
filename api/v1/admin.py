@@ -4,11 +4,9 @@ from companies.views.admin.company import CompanyAdminViewSet
 from finance.views.admin.account import AccountAdminViewSet
 from finance.views.admin.transaction import TransactionAdminViewSet
 from lessons.views.admin.lesson import LessonAdminViewSet
-from pricing.views.admin.price import (
-    PersonalPlanAdminViewSet,
-    SchoolPriceAdminViewSet,
-    TeacherRateAdminViewSet,
-)
+from pricing.views.admin.personal_plan import PersonalPlanAdminViewSet
+from pricing.views.admin.school_price import SchoolPriceAdminViewSet
+from pricing.views.admin.teacher_rate import TeacherRateAdminViewSet
 from school_settings.views.admin.currency import CurrencyAdminViewSet
 from school_settings.views.admin.duration import DurationAdminViewSet
 from school_settings.views.admin.exchange_rate import ExchangeRateAdminViewSet

@@ -8,7 +8,11 @@ from rest_framework.response import Response
 
 from lessons.filters import LessonFilter
 from lessons.models import Lesson
-from lessons.serializers.admin.lesson import LessonAdminSerializer, LessonStatusSerializer
+from lessons.serializers.admin.lesson import (
+    LessonAdminListSerializer,
+    LessonAdminSerializer,
+    LessonStatusSerializer,
+)
 from lessons.services import LessonChangeStatus
 
 
@@ -19,7 +23,12 @@ class LessonAdminViewSet(viewsets.ModelViewSet):
     go through the change-status action. Only planned lessons can be deleted."""
 
     permission_classes = (IsAdminUser, DjangoModelPermissions)
-    serializer_class = LessonAdminSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return LessonAdminListSerializer
+        return LessonAdminSerializer
+
     queryset = (Lesson.objects
                 .select_related("teacher__user", "language", "lesson_type",
                                 "duration", "lesson_currency")

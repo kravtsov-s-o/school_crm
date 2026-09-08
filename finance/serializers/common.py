@@ -4,6 +4,8 @@ from finance.models import Account
 
 
 class AccountBriefSerializer(serializers.ModelSerializer):
+    """Compact account reference (id + owner label)."""
+
     owner = serializers.SerializerMethodField()
 
     class Meta:

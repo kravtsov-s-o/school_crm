@@ -13,6 +13,8 @@ def validate_avatar_size(f):
 
 
 class AvatarSerializer(serializers.ModelSerializer):
+    """The user's avatar upload — image only, ≤ 2 MB, png/jpg/jpeg/webp."""
+
     avatar = serializers.ImageField(validators=[
         FileExtensionValidator(allowed_extensions=['png', 'jpg', 'jpeg', 'webp']),
         validate_avatar_size,

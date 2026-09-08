@@ -4,6 +4,8 @@ from pricing.models import PersonalPlan
 
 
 class PersonalPlanBriefSerializer(serializers.ModelSerializer):
+    """Compact personal-plan reference (id + name)."""
+
     class Meta:
         model = PersonalPlan
         fields = ("id", "name")

@@ -8,7 +8,16 @@ from users.models import User
 from users.serializers.common import validate_password_strength
 
 
-class UserAdminSerializer(serializers.ModelSerializer):
+class UserAdminListSerializer(serializers.ModelSerializer):
+    """Admin List view of a ``User``: account fields and role flags."""
+
+    class Meta:
+        model = User
+        fields = ("id", "username", "first_name", "last_name", "email",
+                  "is_teacher", "is_student", "is_active", "is_staff", "is_superuser")
+
+
+class UserAdminSerializer(UserAdminListSerializer):
     """Admin read/update view of a ``User``: account fields, role flags, and
     group/permission assignment. Excludes the password (managed separately via
     creation and the set-password action)."""
@@ -17,10 +26,9 @@ class UserAdminSerializer(serializers.ModelSerializer):
                              validators=[UniqueValidator(queryset=User.objects.all())])
     timezone = TimeZoneSerializerField()
 
-    class Meta:
+    class Meta(UserAdminListSerializer.Meta):
         model = User
-        fields = ("id", "username", "first_name", "last_name", "email",
-                  "is_teacher", "is_student", "is_active", "is_staff", "is_superuser",
+        fields = (*UserAdminListSerializer.Meta.fields,
                   "timezone", "phone", "avatar",
                   "groups", "user_permissions")
         read_only_fields = ("id", "avatar")

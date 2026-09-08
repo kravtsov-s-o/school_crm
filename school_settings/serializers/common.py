@@ -4,6 +4,8 @@ from school_settings.models import Currency, Duration, Language, LessonType, Tea
 
 
 class CurrencyBriefSerializer(serializers.ModelSerializer):
+    """Compact currency reference (id + code + name)."""
+
     class Meta:
         model = Currency
         fields = ("id", "code", "name")
@@ -11,6 +13,8 @@ class CurrencyBriefSerializer(serializers.ModelSerializer):
 
 
 class LanguageBriefSerializer(serializers.ModelSerializer):
+    """Compact language reference (id + name)."""
+
     class Meta:
         model = Language
         fields = ("id", "name")
@@ -18,6 +22,8 @@ class LanguageBriefSerializer(serializers.ModelSerializer):
 
 
 class LessonTypeBriefSerializer(serializers.ModelSerializer):
+    """Compact lesson-type reference (id + name)."""
+
     class Meta:
         model = LessonType
         fields = ("id", "name")
@@ -25,6 +31,8 @@ class LessonTypeBriefSerializer(serializers.ModelSerializer):
 
 
 class TeacherGradeBriefSerializer(serializers.ModelSerializer):
+    """Compact teacher-grade reference (id + name)."""
+
     class Meta:
         model = TeacherGrade
         fields = ("id", "name")
@@ -32,6 +40,8 @@ class TeacherGradeBriefSerializer(serializers.ModelSerializer):
 
 
 class DurationBriefSerializer(serializers.ModelSerializer):
+    """Compact duration reference (id + minutes)."""
+
     class Meta:
         model = Duration
         fields = ("id", "minutes")

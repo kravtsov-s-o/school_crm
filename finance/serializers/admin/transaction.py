@@ -11,6 +11,9 @@ MANUAL_TYPES = (TransactionCode.MANUAL_TOPUP, TransactionCode.MANUAL_PAYOUT,
 
 
 class TransactionAdminSerializer(serializers.ModelSerializer):
+    """Admin transaction — create (manual types only) + read. Amount sent positive,
+    signed by direction on save; lesson is read-only (auto transactions carry it)."""
+
     account = BriefRelatedField(AccountBriefSerializer, queryset=Account.objects.all())
     currency = BriefRelatedField(CurrencyBriefSerializer, queryset=Currency.objects.all())
     type = serializers.ChoiceField(choices=[(c.value, c.label) for c in MANUAL_TYPES])

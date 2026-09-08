@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from users.models import User
 from users.serializers.admin.user import (
     UserAdminCreateSerializer,
+    UserAdminListSerializer,
     UserAdminSerializer,
     UserAdminSetPasswordSerializer,
 )
@@ -28,7 +29,9 @@ class UserAdminViewSet(viewsets.ModelViewSet):
     ordering_fields = ("first_name", "last_name", "email", "username", "is_active")
 
     def get_serializer_class(self):
-        if self.action == "create":
+        if self.action == "list":
+            return UserAdminListSerializer
+        elif self.action == "create":
             return UserAdminCreateSerializer
         return UserAdminSerializer
 

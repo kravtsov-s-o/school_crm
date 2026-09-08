@@ -3,17 +3,22 @@ from rest_framework import viewsets
 
 from lessons.filters import LessonFilter
 from lessons.models import Lesson
-from lessons.serializers.cabinet.student_lesson import StudentLessonCabinetSerializer
+from lessons.serializers.cabinet.student_lesson import StudentLessonCabinetSerializer, \
+    StudentLessonCabinetListSerializer
 
 
 @extend_schema(tags=["Cabinet: Student Lesson"])
 class StudentLessonCabinetViewSet(viewsets.ReadOnlyModelViewSet):
     """The signed-in student's own lessons — read-only list + detail."""
 
-    serializer_class = StudentLessonCabinetSerializer
     filterset_class = LessonFilter
     ordering_fields = ("start_at", "status", "duration__minutes",
                        "lesson_type__name", "teacher__user__last_name")
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return StudentLessonCabinetListSerializer
+        return StudentLessonCabinetSerializer
 
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):
