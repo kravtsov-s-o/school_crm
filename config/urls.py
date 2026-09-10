@@ -32,7 +32,7 @@ urlpatterns = [
 
     path("api/v1/admin/", include("api.v1.admin")),
     path("api/v1/cabinet/", include("api.v1.cabinet")),
-    path("api/auth/", include("users.auth.urls")),
+    path("api/auth/", include("authentication.urls")),
     *i18n_patterns(
         path("admin/", admin.site.urls),
     )

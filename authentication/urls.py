@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from users.auth.views import PasswordResetConfirmView, PasswordResetRequestView
+from authentication.views import PasswordResetConfirmView, PasswordResetRequestView
 
 urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='jwt-login'),
