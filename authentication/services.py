@@ -11,5 +11,5 @@ User = get_user_model()
 def send_set_password_email(user: User, subject: str) -> None:
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = default_token_generator.make_token(user)
-    link = f"{settings.FRONTEND_URL}/reset_password?uid={uid}&token={token}"
+    link = f"{settings.FRONTEND_URL}/reset_password/{uid}/{token}"
     send_mail(subject, f"Reset link: {link}", None, [user.email])
