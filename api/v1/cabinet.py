@@ -13,6 +13,7 @@ from users.views.cabinet.password import ChangePasswordView
 from users.views.cabinet.student import StudentCabinetView
 from users.views.cabinet.teacher import TeacherCabinetView
 from users.views.cabinet.teacher_card import TeacherCardCabinetViewSet
+from users.views.cabinet.teacher_students import TeacherStudentsViewSet
 
 router = DefaultRouter()
 router.register("student-transactions", StudentTransactionCabinetViewSet,
@@ -25,6 +26,8 @@ router.register("teacher-lessons", TeacherLessonCabinetViewSet,
                 basename="teacher-lesson")
 router.register("teacher-cards", TeacherCardCabinetViewSet,
                 basename="teacher-card")
+router.register("teacher-students", TeacherStudentsViewSet,
+                basename="teacher-students")
 
 urlpatterns = [
     path("account/", AccountCabinetView.as_view(), name="account"),
