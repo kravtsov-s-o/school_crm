@@ -28,6 +28,8 @@ router.register("teacher-cards", TeacherCardCabinetViewSet,
                 basename="teacher-card")
 router.register("teacher-students", TeacherStudentsViewSet,
                 basename="teacher-students")
+router.register("teacher-durations", DurationCabinetViewSet,
+                basename="teacher-durations")
 
 urlpatterns = [
     path("account/", AccountCabinetView.as_view(), name="account"),
