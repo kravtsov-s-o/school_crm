@@ -7,6 +7,7 @@ from finance.views.cabinet.transaction import (
 )
 from lessons.views.cabinet.student_lesson import StudentLessonCabinetViewSet
 from lessons.views.cabinet.teacher_lesson import TeacherLessonCabinetViewSet
+from school_settings.views.cabinet.duration import DurationCabinetViewSet
 from users.views.cabinet.account import AccountCabinetView
 from users.views.cabinet.avatar import AvatarCabinetView
 from users.views.cabinet.password import ChangePasswordView
